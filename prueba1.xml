@@ -1,0 +1,60 @@
+<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<plantilla id=\"impresion-impresionvoucherkiosko\">
+<parametro estilo=\"bold\" alineacion=\"centrado\">razonSocial</parametro>
+<salto/>
+<etiqueta estilo=\"bold\" alineacion=\"centrado\">RUC: </etiqueta>
+<parametro estilo=\"bold\" alineacion=\"centrado\">ruc</parametro>
+<salto/>
+<salto/>
+<parametro estilo=\"bold\" alineacion=\"izquierda\">sucursal</parametro>
+<salto/>
+<etiqueta estilo=\"bold\" alineacion=\"izquierda\">TELÉFONO: </etiqueta>
+<parametro estilo=\"bold\" alineacion=\"izquierda\">telefono</parametro>
+<salto/>
+<parametro estilo=\"bold\" alineacion=\"izquierda\">ciudad</parametro>
+<salto/>
+<parametro estilo=\"bold\" alineacion=\"izquierda\" tamano=\"18\">mid</parametro>
+<etiqueta estilo=\"bold\" alineacion=\"izquierda\" tamano=\"1\"> - </etiqueta>
+<parametro estilo=\"bold\" alineacion=\"izquierda\" tamano=\"18\">tid</parametro>
+<salto/>
+<parametro estilo=\"bold\" alineacion=\"izquierda\">tarjeta</parametro>
+<salto/>
+<etiqueta estilo=\"bold\" alineacion=\"izquierda\">TARJETA: </etiqueta>
+<parametro estilo=\"bold\" alineacion=\"izquierda\">nroTarjeta</parametro>
+<salto/>
+<etiqueta estilo=\"bold\" alineacion=\"izquierda\">LOTE#: </etiqueta>
+<parametro estilo=\"bold\" alineacion=\"izquierda\">lote</parametro>
+<etiqueta estilo=\"bold\" alineacion=\"derecha\"> REF#: </etiqueta>
+<parametro estilo=\"bold\" alineacion=\"derecha\">referencia</parametro>
+<salto/>
+<etiqueta estilo=\"bold\" alineacion=\"izquierda\">ADQUIRIENTE: </etiqueta>
+<parametro estilo=\"bold\" alineacion=\"izquierda\">adquiriente</parametro>
+<salto/>
+<etiqueta estilo=\"bold\" alineacion=\"izquierda\">FECHA: </etiqueta>
+<parametro estilo=\"bold\" alineacion=\"izquierda\">fecha</parametro>
+<salto/>
+<etiqueta estilo=\"bold\" alineacion=\"izquierda\">COBRADO POR: </etiqueta>
+<parametro estilo=\"bold\" alineacion=\"izquierda\">nombreCajero</parametro>
+<salto/>
+<etiqueta estilo=\"bold\" alineacion=\"izquierda\">APROBACIÓN: </etiqueta>
+<parametro estilo=\"bold\" alineacion=\"izquierda\">aprobacion</parametro>
+<salto/>
+<!-- End Header-->
+<!-- Body-->
+<registrosDesgloseImpuestos estilo=\"bold\">
+    <item alineacion=\"izquierda\" tamano=\"34\" sizeToMultiply=\"2\">etiquetaImpuesto</item>
+    <item alineacion=\"derecha\" tamano=\"2\" sizeToMultiply=\"2\">simboloMoneda</item>
+    <item alineacion=\"izquierda\" tamano=\"5\" sizeToMultiply=\"2\">valorImpuesto</item>
+</registrosDesgloseImpuestos>
+<salto/>
+<!-- End Body-->
+<!-- Footer-->
+<etiqueta estilo=\"bold\" alineacion=\"izquierda\">CAPTURA ELECTRÓNICA</etiqueta>
+<salto/>
+<etiqueta estilo=\"bold\" alineacion=\"izquierda\">*NO REQUIERE FIRMA*</etiqueta>
+<salto/>
+<etiqueta estilo=\"bold\" alineacion=\"izquierda\">ORIGINAL</etiqueta>
+<salto/>
+<salto/>
+<!-- End Footer-->
+</plantilla>
