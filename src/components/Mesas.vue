@@ -253,13 +253,35 @@
                                                     </template>
                                                 </v-simple-table>
                                             </v-col>
-                                            <v-col cols="6" sm="6" md="6" lg="6" xl="6" :style="{'background':'red', 'color': 'white'}">
-                                                <p :style="{ 'margin-bottom': '0px', 'font-weight': '900'}">Total:</p>
+                                            <v-col cols="6" sm="6" md="6" lg="6" xl="6"
+                                                :style="{ 'background': 'red', 'color': 'white' }">
+                                                <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Total:</p>
                                             </v-col>
-                                            <v-col cols="6" sm="6" md="6" lg="6" xl="6" :style="{'background':'black', 'color': 'white'}">
-                                                <p :style="{ 'margin-bottom': '0px'}">S/. {{ datoCabeceraOrdenPedido.odp_monto_total
+                                            <v-col cols="6" sm="6" md="6" lg="6" xl="6"
+                                                :style="{ 'background': 'black', 'color': 'white' }">
+                                                <p :style="{ 'margin-bottom': '0px' }">S/. {{
+                                                    datoCabeceraOrdenPedido.odp_monto_total
                                                 }}</p>
                                             </v-col>
+
+
+
+                                            <v-form @submit.prevent :style="{'width':'100%'}">
+                                            <v-col cols="12">
+                                                <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Enviar por
+                                                    whatsapp:</p>
+                                                <v-text-field :style="{'margin-top':'0px','padding-top':'0px'}"
+                                                placeholder="Escribe el número" :maxlength="9"></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12">
+                                                <v-btn type="submit" block class="mt-2" color="success"
+                                                :style="{ 'width': '100%', 'margin-top':'0px !important'}">
+                                                    Enviar cuenta
+                                                </v-btn>
+                                            </v-col>
+                                            </v-form>
+
+
                                         </v-row>
                                     </v-container>
                                 </v-card-text>
@@ -286,6 +308,10 @@
 .div-dialog-modal p {
     color: black;
     margin-bottom: 0px;
+}
+
+.v-text-field__details {
+    display: none;
 }
 </style>
 

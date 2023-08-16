@@ -99,7 +99,7 @@ export default
                 };
 
                 this.axios
-                    .post('http://192.168.18.5:8000/api/auth/iniciarSesion', payload,
+                .post('http://192.168.18.5:8000/api/auth/iniciarSesion', payload,
                         {
                             headers: {
                                 "Access-Control-Allow-Origin": "*"
@@ -108,7 +108,7 @@ export default
                     .then(response => (this.accesoUsuario = response.data.data))
 
                 this.axios
-                    .get('http://192.168.18.5:8000/api/auth/listarMesas')
+                .get('http://192.168.18.5:8000/api/auth/listarMesas')
                     .then(response => (this.listaMesas = response.data.data))
             }
         }
