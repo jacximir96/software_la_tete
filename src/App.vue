@@ -13,7 +13,7 @@
 
                     <v-list-item v-for="(item, index) in items" :key="index" :to="{ name: item.action }">
                         <v-list-item-action>
-                            <v-icon>apps</v-icon>
+                            <v-icon>{{ item.icon }}</v-icon>
                         </v-list-item-action>
                         <v-list-item-title class="nav-title">
                             {{ item.title }}
@@ -50,9 +50,9 @@ export default {
         dialog: false,
         drawer: null,
         items: [
-            { icon: 'inicio', title: 'Inicio', action: 'home' },
-            { icon: 'mesas', title: 'Pedidos', action: 'mesas' },
-            { icon: 'cocina', title: 'Cocina', action: 'cocina' }
+            { icon: 'attachment', title: 'Inicio', action: 'home' },
+            { icon: 'moped', title: 'Pedidos', action: 'mesas' },
+            { icon: 'flatware', title: 'Cocina', action: 'cocina' }
         ]
     }),
 };

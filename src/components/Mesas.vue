@@ -1,169 +1,172 @@
 <template>
-    <v-tabs color="deep-purple accent-4" right>
-        <v-tab>Mesas</v-tab>
-        <v-tab>Delivery</v-tab>
-        <v-tab>Para llevar</v-tab>
+    <v-tabs v-model="tab" background-color="indigo" centered dark icons-and-text center>
+        <v-tab href="#tab-1">Mesas</v-tab>
+        <!-- <v-tab>Delivery</v-tab> -->
+        <v-tab href="#tab-2">Para llevar</v-tab>
 
-        <v-tab-item v-for="n in 3" :key="n">
-            <v-container fluid>
-                <v-row justify="center">
-                    <v-col v-for="listaMesa in listaMesas" :key="listaMesa.id" cols="6" sm="4" md="4">
-                        <v-dialog v-model="listaMesa.mesa_modelo" persistent max-width="600px">
-                            <template v-slot:activator="{ on, attrs }">
-                                <div class="div-dialog-modal" v-if="listaMesa.IDStatus === 1"
-                                    :style="{ 'background-color': '#337DFF' }" v-bind="attrs" v-on="on">
-                                    <p>{{ listaMesa.mesa_descripcion }}</p>
-                                </div>
-                                <div class="div-dialog-modal" v-else :style="{ 'background-color': '#FF3F33' }"
-                                    v-bind="attrs" v-on="on">
-                                    <p>{{ listaMesa.mesa_descripcion }}</p>
-                                </div>
-                            </template>
-                            <v-card v-if="listaMesa.IDStatus === 1">
-                                <v-card-title
-                                    :style="{ 'background-color': '#337DFF', 'justify-content': 'space-between' }">
-                                    <span class="text-h5">{{ listaMesa.mesa_descripcion }}</span>
-                                    <v-btn icon dark color="blue darken-1" text @click="listaMesa.mesa_modelo = false"
-                                        style="background: black;">
-                                        <v-icon smal>
-                                            close
-                                        </v-icon>
-                                    </v-btn>
-                                </v-card-title>
-                                <v-card-text>
-                                    <v-container>
-                                        <v-row>
-                                            <v-col cols="12" sm="6" md="6" lg="6" xl="6">
-                                                <v-label>Categoría<span class="text-danger"> * </span></v-label>
-                                                <v-select :items="optionsCategorias" v-model="selectedCategory"
-                                                    @change="filterMe"></v-select>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="6" lg="6" xl="6">
-                                                <v-label>Producto(s)<span class="text-danger"> * </span></v-label>
-                                                <v-select :items="listaProductos" item-text="nombre_productoLimpieza"
-                                                    v-model="selectProduct" item-value="id_productoLimpieza"
-                                                    @change="changeProductoAdd" required>
-                                                </v-select>
-                                            </v-col>
-                                        </v-row>
-                                        <v-row>
-                                            <v-col cols="12" sm="6" md="6" lg="6" xl="6">
-                                                <v-text-field type="number" min="0" :value="1" :disabled="validateLoad"
-                                                    v-model="cantidadPedido"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="6" lg="6" xl="6"
-                                                v-for="productById in productoById">
-                                                <v-text-field :disabled="true"
-                                                    :value="productById.precio_unitario"></v-text-field>
-                                            </v-col>
-                                        </v-row>
-                                        <!-- <v-row> -->
-                                        <!--                                             <v-data-table :single-select="singleSelect" v-model="selected"
+        <v-tabs-items v-model="tab">
+            <v-tab-item v-for="i in 2" :key="i" :value="'tab-' + i">
+                <v-container fluid v-if="i == 1">
+                    <v-row justify="center">
+                        <v-col v-for="listaMesa in listaMesas" :key="listaMesa.id" cols="6" sm="4" md="4">
+                            <v-dialog v-model="listaMesa.mesa_modelo" persistent max-width="600px">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <div class="div-dialog-modal" v-if="listaMesa.IDStatus === 1"
+                                        :style="{ 'background-color': '#337DFF' }" v-bind="attrs" v-on="on">
+                                        <p>{{ listaMesa.mesa_descripcion }}</p>
+                                    </div>
+                                    <div class="div-dialog-modal" v-else :style="{ 'background-color': '#FF3F33' }"
+                                        v-bind="attrs" v-on="on">
+                                        <p>{{ listaMesa.mesa_descripcion }}</p>
+                                    </div>
+                                </template>
+                                <v-card v-if="listaMesa.IDStatus === 1">
+                                    <v-card-title
+                                        :style="{ 'background-color': '#337DFF', 'justify-content': 'space-between' }">
+                                        <span class="text-h5">{{ listaMesa.mesa_descripcion }}</span>
+                                        <v-btn icon dark color="blue darken-1" text @click="listaMesa.mesa_modelo = false"
+                                            style="background: black;">
+                                            <v-icon smal>
+                                                close
+                                            </v-icon>
+                                        </v-btn>
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <v-container>
+                                            <v-row>
+                                                <v-col cols="12" sm="6" md="6" lg="6" xl="6">
+                                                    <v-label>Categoría<span class="text-danger"> * </span></v-label>
+                                                    <v-select :items="optionsCategorias" v-model="selectedCategory"
+                                                        @change="filterMe"></v-select>
+                                                </v-col>
+                                                <v-col cols="12" sm="6" md="6" lg="6" xl="6">
+                                                    <v-label>Producto(s)<span class="text-danger"> * </span></v-label>
+                                                    <v-select :items="listaProductos" item-text="nombre_productoLimpieza"
+                                                        v-model="selectProduct" item-value="id_productoLimpieza"
+                                                        @change="changeProductoAdd" required>
+                                                    </v-select>
+                                                </v-col>
+                                            </v-row>
+                                            <v-row>
+                                                <v-col cols="12" sm="6" md="6" lg="6" xl="6">
+                                                    <v-text-field type="number" min="0" :value="1" :disabled="validateLoad"
+                                                        v-model="cantidadPedido"></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12" sm="6" md="6" lg="6" xl="6"
+                                                    v-for="productById in productoById">
+                                                    <v-text-field :disabled="true"
+                                                        :value="productById.precio_unitario"></v-text-field>
+                                                </v-col>
+                                            </v-row>
+                                            <!-- <v-row> -->
+                                            <!--                                             <v-data-table :single-select="singleSelect" v-model="selected"
                                                 item-key="descripcion" show-select :headers="headers"
                                                 :items="listaProductosSeleccionados" :items-per-page="5"
                                                 class="elevation-1"> -->
-                                        <v-data-table search :headers="headers" :items="listaProductosSeleccionados"
-                                            class="elevation-1">
-                                            <template v-slot:top>
-                                                <v-toolbar flat>
-                                                    <v-toolbar-title>Detalle del pedido</v-toolbar-title>
-                                                    <v-divider class="mx-4" inset vertical></v-divider>
-                                                    <v-spacer></v-spacer>
-                                                    <v-dialog v-model="dialog" max-width="500px">
-                                                        <template v-slot:activator="{ on, attrs }">
-                                                            <v-btn color="primary" @click="initialize">
-                                                                Limpiar
-                                                            </v-btn>
-                                                            <v-btn class="ma-2" color="warning"
-                                                                @click="almacenarListaPedido" :disabled="isButtonValid">
-                                                                Añadir
-                                                            </v-btn>
-                                                        </template>
-                                                        <v-card>
-                                                            <v-card-title>
-                                                                <span class="text-h5">Editar producto del pedido</span>
-                                                            </v-card-title>
-
-                                                            <v-card-text>
-                                                                <v-container>
-                                                                    <v-row>
-                                                                        <v-col cols="12" sm="6" md="12">
-                                                                            <v-text-field v-model="editedItem.descripcion"
-                                                                                label="Descripción"
-                                                                                :disabled="true"></v-text-field>
-                                                                        </v-col>
-                                                                        <v-col cols="12" sm="6" md="4">
-                                                                            <v-text-field v-model="editedItem.cantidad"
-                                                                                label="Cantidad"></v-text-field>
-                                                                        </v-col>
-                                                                        <v-col cols="12" sm="6" md="4">
-                                                                            <v-text-field v-model="editedItem.precio"
-                                                                                label="Precio"
-                                                                                :disabled="true"></v-text-field>
-                                                                        </v-col>
-                                                                        <v-col cols="12" sm="6" md="4">
-                                                                            <v-text-field v-model="editedItem.total"
-                                                                                label="Total"
-                                                                                :disabled="true"></v-text-field>
-                                                                        </v-col>
-                                                                    </v-row>
-                                                                </v-container>
-                                                            </v-card-text>
-                                                            <v-card-actions>
-                                                                <v-spacer></v-spacer>
-                                                                <v-btn color="blue darken-1" text @click="close">
-                                                                    Cancelar
+                                            <v-data-table search :headers="headers" :items="listaProductosSeleccionados"
+                                                class="elevation-1">
+                                                <template v-slot:top>
+                                                    <v-toolbar flat>
+                                                        <v-toolbar-title>Detalle del pedido</v-toolbar-title>
+                                                        <v-divider class="mx-4" inset vertical></v-divider>
+                                                        <v-spacer></v-spacer>
+                                                        <v-dialog v-model="dialog" max-width="500px">
+                                                            <template v-slot:activator="{ on, attrs }">
+                                                                <v-btn color="primary" @click="initialize">
+                                                                    Limpiar
                                                                 </v-btn>
-                                                                <v-btn color="blue darken-1" text @click="save">
-                                                                    Actualizar
+                                                                <v-btn class="ma-2" color="warning"
+                                                                    @click="almacenarListaPedido" :disabled="isButtonValid">
+                                                                    Añadir
                                                                 </v-btn>
-                                                            </v-card-actions>
-                                                        </v-card>
-                                                    </v-dialog>
-                                                    <v-dialog v-model="dialogDelete" max-width="500px">
-                                                        <v-card>
-                                                            <v-card-title class="text-h5">¿Deseas
-                                                                eliminar este producto?</v-card-title>
-                                                            <v-card-actions>
-                                                                <v-spacer></v-spacer>
-                                                                <v-btn color="blue darken-1" text
-                                                                    @click="closeDelete">Cancelar</v-btn>
-                                                                <v-btn color="blue darken-1" text
-                                                                    @click="deleteItemConfirm">Eliminar</v-btn>
-                                                                <v-spacer></v-spacer>
-                                                            </v-card-actions>
-                                                        </v-card>
-                                                    </v-dialog>
-                                                </v-toolbar>
-                                            </template>
-                                            <template v-slot:item.actions="{ item }">
-                                                <v-icon small color="white" @click="editItem(item)"
-                                                    :style="{ 'padding': '6px', 'background': '#FF9F33' }">
-                                                    edit
-                                                </v-icon>
-                                                <v-icon small color="white" @click="deleteItem(item)"
-                                                    :style="{ 'padding': '6px', 'background': '#FF3333' }">
-                                                    delete
-                                                </v-icon>
-                                            </template>
-                                        </v-data-table>
-                                        <!-- </v-row> -->
-                                        <v-row style="padding: 10px 0px 10px 0px;font-weight: 900;margin-top: 5px;">
-                                            <v-col cols="12" sm="6" md="6" lg="6" xl="6">
-                                                <v-text>El monto total del pedido es: {{ totalPedido }}</v-text>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="6" lg="6" xl="6" :style="{ 'text-align': 'right' }">
-                                                <v-btn color="success" @click="valorMesaSeleccionada(listaMesa.IDMesa)"
-                                                    :style="{ 'width': '100%' }">
-                                                    Enviar a cocina
-                                                </v-btn>
-                                            </v-col>
-                                        </v-row>
-                                    </v-container>
+                                                            </template>
+                                                            <v-card>
+                                                                <v-card-title>
+                                                                    <span class="text-h5">Editar producto del pedido</span>
+                                                                </v-card-title>
 
-                                    <small style="color: red;margin-left: 12px;">* Los campos son obligatorios</small>
-                                </v-card-text>
-                                <!--                                 <v-card-actions>
+                                                                <v-card-text>
+                                                                    <v-container>
+                                                                        <v-row>
+                                                                            <v-col cols="12" sm="6" md="12">
+                                                                                <v-text-field
+                                                                                    v-model="editedItem.descripcion"
+                                                                                    label="Descripción"
+                                                                                    :disabled="true"></v-text-field>
+                                                                            </v-col>
+                                                                            <v-col cols="12" sm="6" md="4">
+                                                                                <v-text-field v-model="editedItem.cantidad"
+                                                                                    label="Cantidad"></v-text-field>
+                                                                            </v-col>
+                                                                            <v-col cols="12" sm="6" md="4">
+                                                                                <v-text-field v-model="editedItem.precio"
+                                                                                    label="Precio"
+                                                                                    :disabled="true"></v-text-field>
+                                                                            </v-col>
+                                                                            <v-col cols="12" sm="6" md="4">
+                                                                                <v-text-field v-model="editedItem.total"
+                                                                                    label="Total"
+                                                                                    :disabled="true"></v-text-field>
+                                                                            </v-col>
+                                                                        </v-row>
+                                                                    </v-container>
+                                                                </v-card-text>
+                                                                <v-card-actions>
+                                                                    <v-spacer></v-spacer>
+                                                                    <v-btn color="blue darken-1" text @click="close">
+                                                                        Cancelar
+                                                                    </v-btn>
+                                                                    <v-btn color="blue darken-1" text @click="save">
+                                                                        Actualizar
+                                                                    </v-btn>
+                                                                </v-card-actions>
+                                                            </v-card>
+                                                        </v-dialog>
+                                                        <v-dialog v-model="dialogDelete" max-width="500px">
+                                                            <v-card>
+                                                                <v-card-title class="text-h5">¿Deseas
+                                                                    eliminar este producto?</v-card-title>
+                                                                <v-card-actions>
+                                                                    <v-spacer></v-spacer>
+                                                                    <v-btn color="blue darken-1" text
+                                                                        @click="closeDelete">Cancelar</v-btn>
+                                                                    <v-btn color="blue darken-1" text
+                                                                        @click="deleteItemConfirm">Eliminar</v-btn>
+                                                                    <v-spacer></v-spacer>
+                                                                </v-card-actions>
+                                                            </v-card>
+                                                        </v-dialog>
+                                                    </v-toolbar>
+                                                </template>
+                                                <template v-slot:item.actions="{ item }">
+                                                    <v-icon small color="white" @click="editItem(item)"
+                                                        :style="{ 'padding': '6px', 'background': '#FF9F33' }">
+                                                        edit
+                                                    </v-icon>
+                                                    <v-icon small color="white" @click="deleteItem(item)"
+                                                        :style="{ 'padding': '6px', 'background': '#FF3333' }">
+                                                        delete
+                                                    </v-icon>
+                                                </template>
+                                            </v-data-table>
+                                            <!-- </v-row> -->
+                                            <v-row style="padding: 10px 0px 10px 0px;font-weight: 900;margin-top: 5px;">
+                                                <v-col cols="12" sm="6" md="6" lg="6" xl="6">
+                                                    <v-text>El monto total del pedido es: {{ totalPedido }}</v-text>
+                                                </v-col>
+                                                <v-col cols="12" sm="6" md="6" lg="6" xl="6"
+                                                    :style="{ 'text-align': 'right' }">
+                                                    <v-btn color="success" @click="valorMesaSeleccionada(listaMesa.IDMesa)"
+                                                        :style="{ 'width': '100%' }">
+                                                        Enviar a cocina
+                                                    </v-btn>
+                                                </v-col>
+                                            </v-row>
+                                        </v-container>
+
+                                        <small style="color: red;margin-left: 12px;">* Los campos son obligatorios</small>
+                                    </v-card-text>
+                                    <!--                                 <v-card-actions>
                                     <v-spacer></v-spacer>
                                     <v-btn color="blue darken-1" text @click="listaMesa.mesa_modelo = false">
                                         Close
@@ -172,125 +175,281 @@
                                         Save
                                     </v-btn>
                                 </v-card-actions> -->
-                            </v-card>
-                            <v-card v-else>
-                                <v-card-title
-                                    :style="{ 'background-color': '#337DFF', 'justify-content': 'space-between' }">
-                                    <span class="text-h5">{{ listaMesa.mesa_descripcion }}</span>
-                                    <v-btn icon dark color="blue darken-1" text
-                                        @click="listaMesa.mesa_modelo = false, datosCabeceraOrdenPedido = null"
-                                        style="background: black;">
-                                        <v-icon smal>
-                                            close
-                                        </v-icon>
-                                    </v-btn>
-                                </v-card-title>
-                                <v-card-text>
-                                    <v-container>
-                                        <v-row>
-                                            <v-col cols="12" sm="6" md="6" lg="6" xl="6">
-                                                <v-btn color="info" :style="{ 'width': '100%' }"
-                                                    @click="getDatosCabeceraOrdenPedido(listaMesa.IDMesa)">
-                                                    Ver cuenta
-                                                </v-btn>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="6" lg="6" xl="6">
-                                                <v-btn color="success" :style="{ 'width': '100%' }">
-                                                    Cobrar
-                                                </v-btn>
-                                            </v-col>
-                                        </v-row>
-                                        <v-row v-for="datoCabeceraOrdenPedido in datosCabeceraOrdenPedido">
-                                            <v-col cols="12">
-                                                <h2
-                                                    :style="{ 'text-align': 'center', 'font-weight': '900', 'text-decoration': 'underline' }">
-                                                    La tete restobar</h2>
-                                            </v-col>
-                                            <v-col cols="6" sm="6" md="6" lg="6" xl="6">
-                                                <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Transacción:
-                                                </p>
-                                            </v-col>
-                                            <v-col cols="6" sm="6" md="6" lg="6" xl="6">
-                                                <p :style="{ 'margin-bottom': '0px' }">{{
-                                                    datoCabeceraOrdenPedido.odp_correlativo }}</p>
-                                            </v-col>
-                                            <v-col cols="6" sm="6" md="6" lg="6" xl="6">
-                                                <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Mesa:</p>
-                                            </v-col>
-                                            <v-col cols="6" sm="6" md="6" lg="6" xl="6">
-                                                <p :style="{ 'margin-bottom': '0px' }">{{
-                                                    datoCabeceraOrdenPedido.mesa_descripcion }}</p>
-                                            </v-col>
-                                            <v-col cols="6" sm="6" md="6" lg="6" xl="6">
-                                                <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Fecha:</p>
-                                            </v-col>
-                                            <v-col cols="6" sm="6" md="6" lg="6" xl="6">
-                                                <p :style="{ 'margin-bottom': '0px' }">{{ datoCabeceraOrdenPedido.created_at
-                                                }}</p>
-                                            </v-col>
-                                            <v-col cols="12">
-                                                <v-simple-table>
-                                                    <template v-slot:default>
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="text-left"
-                                                                    :style="{ 'font-weight': '900', 'padding': '16px 0px' }">
-                                                                    Cantidad
-                                                                </th>
-                                                                <th class="text-left"
-                                                                    :style="{ 'font-weight': '900', 'padding': '16px 0px' }">
-                                                                    Descripción
-                                                                </th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr v-for="item in datoCabeceraOrdenPedido.detalleOrdenPedido"
-                                                                :key="item.IDDetalleOrdenPedido">
-                                                                <td>{{ item.dop_cantidad }}</td>
-                                                                <td>{{ item.nombre_productoLimpieza }}</td>
-                                                            </tr>
-                                                        </tbody>
+                                </v-card>
+                                <v-card v-else>
+                                    <v-card-title
+                                        :style="{ 'background-color': '#337DFF', 'justify-content': 'space-between' }">
+                                        <span class="text-h5">{{ listaMesa.mesa_descripcion }}</span>
+                                        <v-btn icon dark color="blue darken-1" text
+                                            @click="listaMesa.mesa_modelo = false, datosCabeceraOrdenPedido = null"
+                                            style="background: black;">
+                                            <v-icon smal>
+                                                close
+                                            </v-icon>
+                                        </v-btn>
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <v-container>
+                                            <v-row>
+                                                <v-col cols="12" sm="6" md="6" lg="6" xl="6">
+                                                    <v-btn color="info" :style="{ 'width': '100%' }"
+                                                        @click="getDatosCabeceraOrdenPedido(listaMesa.IDMesa)">
+                                                        Ver cuenta
+                                                    </v-btn>
+                                                </v-col>
+                                                <v-col cols="12" sm="6" md="6" lg="6" xl="6">
+                                                    <v-btn color="success" :style="{ 'width': '100%' }"
+                                                        @click="eventoCobrarMonto()">
+                                                        Cobrar
+                                                    </v-btn>
+                                                </v-col>
+                                                <v-col cols="12">
+                                                    <v-btn color="error" :style="{ 'width': '100%' }"
+                                                        @click="eventoAumentarPedido()">
+                                                        Añadir nuevo pedido
+                                                    </v-btn>
+                                                </v-col>
+                                            </v-row>
+                                            <v-row v-for="datoCabeceraOrdenPedido in datosCabeceraOrdenPedido" v-if="eventoClickVerCuenta == true">
+                                                <v-col cols="12">
+                                                    <h2
+                                                        :style="{ 'text-align': 'center', 'font-weight': '900', 'text-decoration': 'underline' }">
+                                                        La tete restobar</h2>
+                                                </v-col>
+                                                <v-col cols="6" sm="6" md="6" lg="6" xl="6">
+                                                    <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Mesa:</p>
+                                                </v-col>
+                                                <v-col cols="6" sm="6" md="6" lg="6" xl="6">
+                                                    <p :style="{ 'margin-bottom': '0px' }">{{
+                                                        datoCabeceraOrdenPedido.mesa_descripcion }}</p>
+                                                </v-col>
+                                                <v-col cols="6" sm="6" md="6" lg="6" xl="6">
+                                                    <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Fecha:</p>
+                                                </v-col>
+                                                <v-col cols="6" sm="6" md="6" lg="6" xl="6">
+                                                    <p :style="{ 'margin-bottom': '0px' }">{{
+                                                        datoCabeceraOrdenPedido.created_at
+                                                    }}</p>
+                                                </v-col>
+                                                <v-col cols="12">
+                                                    <v-simple-table>
+                                                        <template v-slot:default>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="text-left"
+                                                                        :style="{ 'font-weight': '900', 'padding': '16px 0px' }">
+                                                                        Cantidad
+                                                                    </th>
+                                                                    <th class="text-left"
+                                                                        :style="{ 'font-weight': '900', 'padding': '16px 0px' }">
+                                                                        Descripción
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr v-for="item in datoCabeceraOrdenPedido.detalleOrdenPedido"
+                                                                    :key="item.IDDetalleOrdenPedido">
+                                                                    <td>{{ item.dop_cantidad }}</td>
+                                                                    <td>{{ item.nombre_productoLimpieza }}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </template>
+                                                    </v-simple-table>
+                                                </v-col>
+                                                <v-col cols="6" sm="6" md="6" lg="6" xl="6"
+                                                    :style="{ 'background': 'red', 'color': 'white' }">
+                                                    <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Total:</p>
+                                                </v-col>
+                                                <v-col cols="6" sm="6" md="6" lg="6" xl="6"
+                                                    :style="{ 'background': 'black', 'color': 'white' }">
+                                                    <p :style="{ 'margin-bottom': '0px' }">S/. {{
+                                                        datoCabeceraOrdenPedido.odp_monto_total
+                                                    }}</p>
+                                                </v-col>
+
+                                                <v-form @submit.prevent :style="{ 'width': '100%' }">
+                                                    <v-col cols="12">
+                                                        <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Enviar
+                                                            por
+                                                            whatsapp:</p>
+                                                        <v-text-field :style="{ 'margin-top': '0px', 'padding-top': '0px' }"
+                                                            placeholder="Escribe el número" :maxlength="9"></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="12">
+                                                        <v-btn type="submit" disabled block class="mt-2" color="success"
+                                                            :style="{ 'width': '100%', 'margin-top': '0px !important' }">
+                                                            Enviar cuenta
+                                                        </v-btn>
+                                                    </v-col>
+                                                </v-form>
+                                            </v-row>
+                                            <v-row v-if="eventoClickCobrar == true">
+                                                <v-form @submit.prevent="cobrarPedidoMesaSeleccionada(listaMesa.IDMesa)"
+                                                    :style="{ 'width': '100%' }">
+                                                    <v-col cols="12">
+                                                        <v-label>Forma de pago<span class="text-danger"> * </span></v-label>
+                                                        <v-select :items="listaFormaPago" item-text="fp_descripcion"
+                                                            v-model="selectFormaPago" item-value="IDFormaPago" required>
+                                                        </v-select>
+                                                    </v-col>
+                                                    <v-col cols="12">
+                                                        <v-btn type="submit" color="success" :style="{ 'width': '100%' }">
+                                                            Cobrar
+                                                        </v-btn>
+                                                    </v-col>
+                                                </v-form>
+                                            </v-row>
+                                            <div v-if="eventoClickTomarPedido == true" :style="{'margin-top':'12px'}">
+                                                <v-row>
+                                                    <v-col cols="12" sm="6" md="6" lg="6" xl="6">
+                                                        <v-label>Categoría<span class="text-danger"> *
+                                                            </span></v-label>
+                                                        <v-select :items="optionsCategorias" v-model="selectedCategory"
+                                                            @change="filterMe"></v-select>
+                                                    </v-col>
+                                                    <v-col cols="12" sm="6" md="6" lg="6" xl="6">
+                                                        <v-label>Producto(s)<span class="text-danger"> *
+                                                            </span></v-label>
+                                                        <v-select :items="listaProductos"
+                                                            item-text="nombre_productoLimpieza" v-model="selectProduct"
+                                                            item-value="id_productoLimpieza" @change="changeProductoAdd"
+                                                            required>
+                                                        </v-select>
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row>
+                                                    <v-col cols="12" sm="6" md="6" lg="6" xl="6">
+                                                        <v-text-field type="number" min="0" :value="1"
+                                                            :disabled="validateLoad"
+                                                            v-model="cantidadPedido"></v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="12" sm="6" md="6" lg="6" xl="6"
+                                                        v-for="productById in productoById">
+                                                        <v-text-field :disabled="true"
+                                                            :value="productById.precio_unitario"></v-text-field>
+                                                    </v-col>
+                                                </v-row>
+                                                <v-data-table search :headers="headers" :items="listaProductosSeleccionados"
+                                                    class="elevation-1">
+                                                    <template v-slot:top>
+                                                        <v-toolbar flat>
+                                                            <v-toolbar-title>Detalle del pedido</v-toolbar-title>
+                                                            <v-divider class="mx-4" inset vertical></v-divider>
+                                                            <v-spacer></v-spacer>
+                                                            <v-dialog v-model="dialog" max-width="500px">
+                                                                <template v-slot:activator="{ on, attrs }">
+                                                                    <v-btn color="primary" @click="initialize">
+                                                                        Limpiar
+                                                                    </v-btn>
+                                                                    <v-btn class="ma-2" color="warning"
+                                                                        @click="almacenarListaPedido"
+                                                                        :disabled="isButtonValid">
+                                                                        Añadir
+                                                                    </v-btn>
+                                                                </template>
+                                                                <v-card>
+                                                                    <v-card-title>
+                                                                        <span class="text-h5">Editar producto del
+                                                                            pedido</span>
+                                                                    </v-card-title>
+
+                                                                    <v-card-text>
+                                                                        <v-container>
+                                                                            <v-row>
+                                                                                <v-col cols="12" sm="6" md="12">
+                                                                                    <v-text-field
+                                                                                        v-model="editedItem.descripcion"
+                                                                                        label="Descripción"
+                                                                                        :disabled="true"></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col cols="12" sm="6" md="4">
+                                                                                    <v-text-field
+                                                                                        v-model="editedItem.cantidad"
+                                                                                        label="Cantidad"></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col cols="12" sm="6" md="4">
+                                                                                    <v-text-field
+                                                                                        v-model="editedItem.precio"
+                                                                                        label="Precio"
+                                                                                        :disabled="true"></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col cols="12" sm="6" md="4">
+                                                                                    <v-text-field v-model="editedItem.total"
+                                                                                        label="Total"
+                                                                                        :disabled="true"></v-text-field>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                        </v-container>
+                                                                    </v-card-text>
+                                                                    <v-card-actions>
+                                                                        <v-spacer></v-spacer>
+                                                                        <v-btn color="blue darken-1" text @click="close">
+                                                                            Cancelar
+                                                                        </v-btn>
+                                                                        <v-btn color="blue darken-1" text @click="save">
+                                                                            Actualizar
+                                                                        </v-btn>
+                                                                    </v-card-actions>
+                                                                </v-card>
+                                                            </v-dialog>
+                                                            <v-dialog v-model="dialogDelete" max-width="500px">
+                                                                <v-card>
+                                                                    <v-card-title class="text-h5">¿Deseas
+                                                                        eliminar este producto?</v-card-title>
+                                                                    <v-card-actions>
+                                                                        <v-spacer></v-spacer>
+                                                                        <v-btn color="blue darken-1" text
+                                                                            @click="closeDelete">Cancelar</v-btn>
+                                                                        <v-btn color="blue darken-1" text
+                                                                            @click="deleteItemConfirm">Eliminar</v-btn>
+                                                                        <v-spacer></v-spacer>
+                                                                    </v-card-actions>
+                                                                </v-card>
+                                                            </v-dialog>
+                                                        </v-toolbar>
                                                     </template>
-                                                </v-simple-table>
-                                            </v-col>
-                                            <v-col cols="6" sm="6" md="6" lg="6" xl="6"
-                                                :style="{ 'background': 'red', 'color': 'white' }">
-                                                <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Total:</p>
-                                            </v-col>
-                                            <v-col cols="6" sm="6" md="6" lg="6" xl="6"
-                                                :style="{ 'background': 'black', 'color': 'white' }">
-                                                <p :style="{ 'margin-bottom': '0px' }">S/. {{
-                                                    datoCabeceraOrdenPedido.odp_monto_total
-                                                }}</p>
-                                            </v-col>
-
-
-
-                                            <v-form @submit.prevent :style="{'width':'100%'}">
-                                            <v-col cols="12">
-                                                <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Enviar por
-                                                    whatsapp:</p>
-                                                <v-text-field :style="{'margin-top':'0px','padding-top':'0px'}"
-                                                placeholder="Escribe el número" :maxlength="9"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12">
-                                                <v-btn type="submit" block class="mt-2" color="success"
-                                                :style="{ 'width': '100%', 'margin-top':'0px !important'}">
-                                                    Enviar cuenta
-                                                </v-btn>
-                                            </v-col>
-                                            </v-form>
-
-
-                                        </v-row>
-                                    </v-container>
-                                </v-card-text>
-                            </v-card>
-                        </v-dialog>
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-tab-item>
+                                                    <template v-slot:item.actions="{ item }">
+                                                        <v-icon small color="white" @click="editItem(item)"
+                                                            :style="{ 'padding': '6px', 'background': '#FF9F33' }">
+                                                            edit
+                                                        </v-icon>
+                                                        <v-icon small color="white" @click="deleteItem(item)"
+                                                            :style="{ 'padding': '6px', 'background': '#FF3333' }">
+                                                            delete
+                                                        </v-icon>
+                                                    </template>
+                                                </v-data-table>
+                                                <v-row style="padding: 10px 0px 10px 0px;font-weight: 900;margin-top: 5px;">
+                                                    <v-col cols="12" sm="6" md="6" lg="6" xl="6">
+                                                        <v-text>El monto total del pedido es: {{ totalPedido
+                                                        }}</v-text>
+                                                    </v-col>
+                                                    <v-col cols="12" sm="6" md="6" lg="6" xl="6"
+                                                        :style="{ 'text-align': 'right' }">
+                                                        <v-btn color="success"
+                                                            @click="valorMesaSeleccionada(listaMesa.IDMesa)"
+                                                            :style="{ 'width': '100%' }">
+                                                            Enviar a cocina
+                                                        </v-btn>
+                                                    </v-col>
+                                                </v-row>
+                                            </div>
+                                        </v-container>
+                                    </v-card-text>
+                                </v-card>
+                            </v-dialog>
+                        </v-col>
+                    </v-row>
+                </v-container>
+                <v-container v-else>
+                    <v-row justify="center">
+                        <v-col cols="12">
+                            <p>Pedidos para llevar - en mantenimiento!!</p>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-tab-item>
+        </v-tabs-items>
     </v-tabs>
     <!-- </v-card> -->
 </template>
@@ -319,6 +478,10 @@
 export default {
     name: 'Mesas',
     data: () => ({
+        eventoClickVerCuenta: false,
+        eventoClickCobrar: false,
+        eventoClickTomarPedido: false,
+        tab: null,
         datosCabeceraOrdenPedido: null,
         idMesaSelected: "",
         dialog: false,
@@ -331,10 +494,12 @@ export default {
         listaMesas: null,
         listaCategorias: null,
         listaProductos: null,
+        listaFormaPago: null,
         productoById: null,
         dialog: false,
         selectedCategory: 1,
         selectProduct: "",
+        selectFormaPago: "",
         cantidadPedido: 1,
         totalPedido: 0,
         listaMesa: { IDMesa: '' },
@@ -365,6 +530,7 @@ export default {
         await this.getListCategorias();
         await this.getListMesas();
         await this.getListProductos(this.selectedCategory);
+        await this.getListFormaPago();
     },
     computed: {
         optionsCategorias() {
@@ -431,6 +597,20 @@ export default {
                 })
                 .finally(() => (this.loading = false));
         },
+        async getListFormaPago() {
+            await this.axios({
+                url: 'http://192.168.18.5:8000/api/auth/listarFormaPago',
+                method: 'GET',
+                async: false
+            })
+                .then(response => {
+                    this.listaFormaPago = response.data.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+                .finally(() => (this.loading = false));
+        },
         async cambiarStatusMesa(jsonStatusMesa) {
             await this.axios({
                 url: 'http://192.168.18.5:8000/api/auth/cambiarStatusMesa',
@@ -467,6 +647,10 @@ export default {
                 .finally(() => (this.loading = false));
         },
         async getDatosCabeceraOrdenPedido(idMesaSeleccionadaActual) {
+            this.eventoClickVerCuenta = !this.eventoClickVerCuenta;
+            this.eventoClickCobrar = false;
+            this.eventoClickTomarPedido = false;
+            
             await this.axios({
                 url: 'http://192.168.18.5:8000/api/auth/getDatosCabeceraOrdenPedido',
                 method: 'GET',
@@ -475,7 +659,36 @@ export default {
             })
                 .then(response => {
                     this.datosCabeceraOrdenPedido = response.data.data;
-                    console.log(this.datosCabeceraOrdenPedido);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+                .finally(() => (this.loading = false));
+        },
+        async cobrarPedidoMesaSeleccionada(idMesaSeleccionadaActual) {
+
+            let valueFormaPago = this.selectFormaPago;
+
+            await this.axios({
+                url: 'http://192.168.18.5:8000/api/auth/cobrarPedidoMesaSeleccionada',
+                method: 'GET',
+                async: false,
+                params: { idMesaSeleccionadaActual, valueFormaPago }
+            })
+                .then(response => {
+                    if (response.status == 200) {
+                        this.$swal('Nota de venta creada correctamente', '', 'success')
+                        this.listaMesa.mesa_modelo = false;
+                        this.datosCabeceraOrdenPedido = null;
+                        this.initialize();
+
+                        let jsonStatusMesa = {
+                            "IDStatus": 1,
+                            "IDMesa": idMesaSeleccionadaActual
+                        }
+
+                        this.cambiarStatusMesa(jsonStatusMesa);
+                    }
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -514,6 +727,7 @@ export default {
                                 }
 
                                 this.cambiarStatusMesa(jsonStatusMesa);
+                                this.datosCabeceraOrdenPedido = null;
                             } else if (result.isDenied) {
                                 this.$swal('Orden de pedido no se pudo crear', '', 'info')
                             }
@@ -637,6 +851,16 @@ export default {
         valorMesaSeleccionada(mesaSeleccionada) {
             this.idMesaSelected = mesaSeleccionada;
             this.crearOrdenPedido();
+        },
+        eventoCobrarMonto() {
+            this.eventoClickCobrar = !this.eventoClickCobrar;
+            this.eventoClickVerCuenta = false;
+            this.eventoClickTomarPedido = false;
+        },
+        eventoAumentarPedido() {
+            this.eventoClickTomarPedido = !this.eventoClickTomarPedido;
+            this.eventoClickVerCuenta = false;
+            this.eventoClickCobrar = false;
         }
     }
 }
