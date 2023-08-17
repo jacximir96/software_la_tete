@@ -1,6 +1,6 @@
 <template>
-    <v-app id="inspire">
-        <v-navigation-drawer v-model="drawer" :clipped="$vuetify.breakpoint.lgAndUp" app>
+    <v-app id="inspire" dark>
+        <v-navigation-drawer v-model="drawer" :clipped="$vuetify.breakpoint.lgAndUp" app dark>
             <v-list dense>
                 <template>
                     <v-list-item class="px-2">
@@ -8,10 +8,23 @@
                             <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
                         </v-list-item-avatar>
 
-                        <v-list-item-title>Jacximir Salazar Echevarria</v-list-item-title>
+                        <v-list-item-title>Administrador - lateterestobar</v-list-item-title>
                     </v-list-item>
 
-                    <v-list-item v-for="(item, index) in items" :key="index" :to="{ name: item.action }">
+                    <v-divider></v-divider>
+
+                    <v-list-item v-if="item.action == 'home'" v-for="(item, index) in items" :key="index"
+                        :to="{ name: item.action }" ref="estadoActivo">
+                        <v-list-item-action>
+                            <v-icon>{{ item.icon }}</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-title class="nav-title">
+                            {{ item.title }}
+                        </v-list-item-title>
+                    </v-list-item>
+
+                    <v-list-item v-if="item.action != 'home'" v-for="(item, index) in items" :key="index"
+                        :to="{ name: item.action }">
                         <v-list-item-action>
                             <v-icon>{{ item.icon }}</v-icon>
                         </v-list-item-action>
@@ -55,5 +68,20 @@ export default {
             { icon: 'flatware', title: 'Cocina', action: 'cocina' }
         ]
     }),
+    methods: {
+        getSession() {
+            if (this.$route.path === "/") {
+                this.$refs.estadoActivo[0].$el.classList.add("v-list-item--active");
+            } else {
+                this.$refs.estadoActivo[0].$el.classList.remove("v-list-item--active");
+            }
+        }
+    },
+    created: function () {
+        this.getSession()
+    },
+    updated: function () {
+        this.getSession()
+    }
 };
 </script>

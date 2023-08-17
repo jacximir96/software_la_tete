@@ -1,5 +1,5 @@
 <template>
-    <h3>Cocina</h3>
+    <h3>Se va a asignar impresión por ticket.</h3>
 </template>
 
 <script>

@@ -24,7 +24,7 @@
                                     <v-card-title
                                         :style="{ 'background-color': '#337DFF', 'justify-content': 'space-between' }">
                                         <span class="text-h5">{{ listaMesa.mesa_descripcion }}</span>
-                                        <v-btn icon dark color="blue darken-1" text @click="listaMesa.mesa_modelo = false"
+                                        <v-btn icon dark color="blue darken-1" text @click="listaMesa.mesa_modelo = false, inicializarBotones()"
                                             style="background: black;">
                                             <v-icon smal>
                                                 close
@@ -54,15 +54,10 @@
                                                 </v-col>
                                                 <v-col cols="12" sm="6" md="6" lg="6" xl="6"
                                                     v-for="productById in productoById">
-                                                    <v-text-field :disabled="true"
+                                                    <v-text-field :disabled="true" v-if="selectProduct == '' ? productById.precio_unitario = '' : productById.precio_unitario"
                                                         :value="productById.precio_unitario"></v-text-field>
                                                 </v-col>
                                             </v-row>
-                                            <!-- <v-row> -->
-                                            <!--                                             <v-data-table :single-select="singleSelect" v-model="selected"
-                                                item-key="descripcion" show-select :headers="headers"
-                                                :items="listaProductosSeleccionados" :items-per-page="5"
-                                                class="elevation-1"> -->
                                             <v-data-table search :headers="headers" :items="listaProductosSeleccionados"
                                                 class="elevation-1">
                                                 <template v-slot:top>
@@ -95,7 +90,7 @@
                                                                                     :disabled="true"></v-text-field>
                                                                             </v-col>
                                                                             <v-col cols="12" sm="6" md="4">
-                                                                                <v-text-field v-model="editedItem.cantidad"
+                                                                                <v-text-field type="number" min="0" v-model="editedItem.cantidad"
                                                                                     label="Cantidad"></v-text-field>
                                                                             </v-col>
                                                                             <v-col cols="12" sm="6" md="4">
@@ -166,22 +161,13 @@
 
                                         <small style="color: red;margin-left: 12px;">* Los campos son obligatorios</small>
                                     </v-card-text>
-                                    <!--                                 <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn color="blue darken-1" text @click="listaMesa.mesa_modelo = false">
-                                        Close
-                                    </v-btn>
-                                    <v-btn color="blue darken-1" text @click="dialog = false">
-                                        Save
-                                    </v-btn>
-                                </v-card-actions> -->
                                 </v-card>
                                 <v-card v-else>
                                     <v-card-title
                                         :style="{ 'background-color': '#337DFF', 'justify-content': 'space-between' }">
                                         <span class="text-h5">{{ listaMesa.mesa_descripcion }}</span>
                                         <v-btn icon dark color="blue darken-1" text
-                                            @click="listaMesa.mesa_modelo = false, datosCabeceraOrdenPedido = null"
+                                            @click="listaMesa.mesa_modelo = false, datosCabeceraOrdenPedido = null, inicializarBotones()"
                                             style="background: black;">
                                             <v-icon smal>
                                                 close
@@ -210,6 +196,10 @@
                                                     </v-btn>
                                                 </v-col>
                                             </v-row>
+
+                                            <v-divider :style="{'margin-top':'10px','margin-bottom':'10px'}"
+                                            v-if="eventoClickVerCuenta == true || eventoClickCobrar == true || eventoClickTomarPedido == true"></v-divider>
+
                                             <v-row v-for="datoCabeceraOrdenPedido in datosCabeceraOrdenPedido" v-if="eventoClickVerCuenta == true">
                                                 <v-col cols="12">
                                                     <h2
@@ -237,11 +227,15 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th class="text-left"
-                                                                        :style="{ 'font-weight': '900', 'padding': '16px 0px' }">
+                                                                        :style="{ 'font-weight': '900', 'padding': '16px' }">
                                                                         Cantidad
                                                                     </th>
                                                                     <th class="text-left"
-                                                                        :style="{ 'font-weight': '900', 'padding': '16px 0px' }">
+                                                                        :style="{ 'font-weight': '900', 'padding': '16px' }">
+                                                                        Categoría
+                                                                    </th>
+                                                                    <th class="text-left"
+                                                                        :style="{ 'font-weight': '900', 'padding': '16px' }">
                                                                         Descripción
                                                                     </th>
                                                                 </tr>
@@ -250,6 +244,7 @@
                                                                 <tr v-for="item in datoCabeceraOrdenPedido.detalleOrdenPedido"
                                                                     :key="item.IDDetalleOrdenPedido">
                                                                     <td>{{ item.dop_cantidad }}</td>
+                                                                    <td>{{ item.nombre_categoria }}</td>
                                                                     <td>{{ item.nombre_productoLimpieza }}</td>
                                                                 </tr>
                                                             </tbody>
@@ -292,6 +287,13 @@
                                                             v-model="selectFormaPago" item-value="IDFormaPago" required>
                                                         </v-select>
                                                     </v-col>
+
+                                                    <v-col cols="12" v-if="selectFormaPago == 1">
+                                                        <v-label>Ingresa monto<span class="text-danger"> * </span></v-label>
+                                                        <v-text-field type="number" :style="{ 'margin-top': '0px', 'padding-top': '0px' }"
+                                                            placeholder="Escribe el monto" :maxlength="3" min="0" v-model="montoEfectivo"></v-text-field>
+                                                    </v-col>
+
                                                     <v-col cols="12">
                                                         <v-btn type="submit" color="success" :style="{ 'width': '100%' }">
                                                             Cobrar
@@ -454,7 +456,7 @@
     <!-- </v-card> -->
 </template>
 
-<style>
+<style scoped>
 .div-dialog-modal {
     width: 100%;
     padding: 30px 0px;
@@ -478,6 +480,7 @@
 export default {
     name: 'Mesas',
     data: () => ({
+        montoEfectivo: "",
         eventoClickVerCuenta: false,
         eventoClickCobrar: false,
         eventoClickTomarPedido: false,
@@ -622,7 +625,6 @@ export default {
                 }
             })
                 .then(response => {
-                    console.log("Mesa actualizada correctamente")
                     this.getListMesas();
                 })
                 .catch(function (error) {
@@ -650,6 +652,7 @@ export default {
             this.eventoClickVerCuenta = !this.eventoClickVerCuenta;
             this.eventoClickCobrar = false;
             this.eventoClickTomarPedido = false;
+            this.inicializarEstadosCerrar();
             
             await this.axios({
                 url: 'http://192.168.18.5:8000/api/auth/getDatosCabeceraOrdenPedido',
@@ -668,6 +671,9 @@ export default {
         async cobrarPedidoMesaSeleccionada(idMesaSeleccionadaActual) {
 
             let valueFormaPago = this.selectFormaPago;
+            let valueselectFormaPago = this.selectFormaPago;
+            let valueVueltoPago = 0;
+            let valueMontoEfectivo = this.montoEfectivo;
 
             await this.axios({
                 url: 'http://192.168.18.5:8000/api/auth/cobrarPedidoMesaSeleccionada',
@@ -677,10 +683,18 @@ export default {
             })
                 .then(response => {
                     if (response.status == 200) {
-                        this.$swal('Nota de venta creada correctamente', '', 'success')
+
+                        if (valueselectFormaPago == 1) {
+                            valueVueltoPago = valueMontoEfectivo - response.data.data.cfac_monto_total;
+                            this.$swal('Nota de venta creada correctamente, su vuelto es: ' + valueVueltoPago, '', 'success')
+                        } else {
+                            this.$swal('Nota de venta creada correctamente', '', 'success')
+                        }
+
                         this.listaMesa.mesa_modelo = false;
                         this.datosCabeceraOrdenPedido = null;
                         this.initialize();
+                        this.inicializarEstadosCerrar();
 
                         let jsonStatusMesa = {
                             "IDStatus": 1,
@@ -720,6 +734,7 @@ export default {
                                 this.$swal('Orden de pedido creada correctamente', '', 'success')
                                 this.listaMesa.mesa_modelo = false;
                                 this.initialize();
+                                this.inicializarBotones();
 
                                 let jsonStatusMesa = {
                                     "IDStatus": 2,
@@ -761,10 +776,12 @@ export default {
             }
 
             this.listaProductosSeleccionados.push(agregarListaObjeto)
+            this.selectProduct = "";
             this.totalDetalle();
         },
         initialize() {
             this.listaProductosSeleccionados = [];
+            this.selectProduct = "";
             this.totalDetalle();
         },
         totalDetalle() {
@@ -782,9 +799,6 @@ export default {
         editItem(item) {
             this.editedIndex = this.listaProductosSeleccionados.indexOf(item)
             this.editedItem = Object.assign({}, item)
-
-            console.log(this.editedItem.cantidad);
-
             this.dialog = true
         },
 
@@ -856,11 +870,25 @@ export default {
             this.eventoClickCobrar = !this.eventoClickCobrar;
             this.eventoClickVerCuenta = false;
             this.eventoClickTomarPedido = false;
+            this.inicializarEstadosCerrar();
         },
         eventoAumentarPedido() {
             this.eventoClickTomarPedido = !this.eventoClickTomarPedido;
             this.eventoClickVerCuenta = false;
             this.eventoClickCobrar = false;
+            this.inicializarEstadosCerrar();
+        },
+        inicializarBotones() {
+            this.eventoClickVerCuenta = false;
+            this.eventoClickTomarPedido = false;
+            this.eventoClickCobrar = false;
+            this.inicializarEstadosCerrar();
+        },
+        inicializarEstadosCerrar() {
+            this.selectProduct = "";
+            this.montoEfectivo = 0;
+            this.selectFormaPago = "";
+            this.listaProductosSeleccionados = [];
         }
     }
 }
