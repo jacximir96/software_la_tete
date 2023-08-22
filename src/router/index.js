@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Mesas from '../components/Mesas.vue'
 import Cocina from '../components/Cocina.vue'
+import Administracion from '../components/Administracion.vue'
 import Login from '../views/Login.vue'
 
 Vue.use(VueRouter)
@@ -10,6 +11,11 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
+    name: 'home',
+    component: HomeView
+  },
+  {
+    path: '/login',
     name: 'login',
     component: Login
   },
@@ -22,6 +28,11 @@ const routes = [
     path: '/cocina',
     name: 'cocina',
     component: Cocina
+  },
+  {
+    path: '/administracion',
+    name: 'administracion',
+    component: Administracion
   }
 ]
 

@@ -56,7 +56,6 @@
 </template>
 
 <script>
-
 export default {
     name: 'App',
     data: () => ({
@@ -65,7 +64,8 @@ export default {
         items: [
             { icon: 'attachment', title: 'Inicio', action: 'home' },
             { icon: 'moped', title: 'Pedidos', action: 'mesas' },
-            { icon: 'flatware', title: 'Cocina', action: 'cocina' }
+            { icon: 'flatware', title: 'Cocina', action: 'cocina' },
+            { icon: 'beenhere', title: 'Administracion', action: 'administracion' }
         ]
     }),
     methods: {

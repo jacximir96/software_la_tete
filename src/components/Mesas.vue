@@ -24,7 +24,8 @@
                                     <v-card-title
                                         :style="{ 'background-color': '#337DFF', 'justify-content': 'space-between' }">
                                         <span class="text-h5">{{ listaMesa.mesa_descripcion }}</span>
-                                        <v-btn icon dark color="blue darken-1" text @click="listaMesa.mesa_modelo = false, inicializarBotones()"
+                                        <v-btn icon dark color="blue darken-1" text
+                                            @click="listaMesa.mesa_modelo = false, inicializarBotones()"
                                             style="background: black;">
                                             <v-icon smal>
                                                 close
@@ -36,15 +37,15 @@
                                             <v-row>
                                                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                                                     <v-label>Categoría<span class="text-danger"> * </span></v-label>
-                                                    <v-select :items="optionsCategorias" v-model="selectedCategory"
-                                                        @change="filterMe"></v-select>
+                                                    <v-autocomplete :items="optionsCategorias" v-model="selectedCategory"
+                                                        @change="filterMe"></v-autocomplete>
                                                 </v-col>
                                                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                                                     <v-label>Producto(s)<span class="text-danger"> * </span></v-label>
-                                                    <v-select :items="listaProductos" item-text="nombre_productoLimpieza"
+                                                    <v-autocomplete :items="listaProductos" item-text="nombre_productoLimpieza"
                                                         v-model="selectProduct" item-value="id_productoLimpieza"
                                                         @change="changeProductoAdd" required>
-                                                    </v-select>
+                                                    </v-autocomplete>
                                                 </v-col>
                                             </v-row>
                                             <v-row>
@@ -54,7 +55,8 @@
                                                 </v-col>
                                                 <v-col cols="12" sm="6" md="6" lg="6" xl="6"
                                                     v-for="productById in productoById">
-                                                    <v-text-field :disabled="true" v-if="selectProduct == '' ? productById.precio_unitario = '' : productById.precio_unitario"
+                                                    <v-text-field :disabled="true"
+                                                        v-if="selectProduct == '' ? productById.precio_unitario = '' : productById.precio_unitario"
                                                         :value="productById.precio_unitario"></v-text-field>
                                                 </v-col>
                                             </v-row>
@@ -90,7 +92,8 @@
                                                                                     :disabled="true"></v-text-field>
                                                                             </v-col>
                                                                             <v-col cols="12" sm="6" md="4">
-                                                                                <v-text-field type="number" min="0" v-model="editedItem.cantidad"
+                                                                                <v-text-field type="number" min="0"
+                                                                                    v-model="editedItem.cantidad"
                                                                                     label="Cantidad"></v-text-field>
                                                                             </v-col>
                                                                             <v-col cols="12" sm="6" md="4">
@@ -152,7 +155,8 @@
                                                 <v-col cols="12" sm="6" md="6" lg="6" xl="6"
                                                     :style="{ 'text-align': 'right' }">
                                                     <v-btn color="success" @click="valorMesaSeleccionada(listaMesa.IDMesa)"
-                                                        :style="{ 'width': '100%' }">
+                                                        :style="{ 'width': '100%' }"
+                                                        :disabled="manipularDisabledEnviarCocina">
                                                         Enviar a cocina
                                                     </v-btn>
                                                 </v-col>
@@ -197,10 +201,11 @@
                                                 </v-col>
                                             </v-row>
 
-                                            <v-divider :style="{'margin-top':'10px','margin-bottom':'10px'}"
-                                            v-if="eventoClickVerCuenta == true || eventoClickCobrar == true || eventoClickTomarPedido == true"></v-divider>
+                                            <v-divider :style="{ 'margin-top': '10px', 'margin-bottom': '10px' }"
+                                                v-if="eventoClickVerCuenta == true || eventoClickCobrar == true || eventoClickTomarPedido == true"></v-divider>
 
-                                            <v-row v-for="datoCabeceraOrdenPedido in datosCabeceraOrdenPedido" v-if="eventoClickVerCuenta == true">
+                                            <v-row v-for="datoCabeceraOrdenPedido in datosCabeceraOrdenPedido"
+                                                v-if="eventoClickVerCuenta == true">
                                                 <v-col cols="12">
                                                     <h2
                                                         :style="{ 'text-align': 'center', 'font-weight': '900', 'text-decoration': 'underline' }">
@@ -279,44 +284,47 @@
                                                 </v-form>
                                             </v-row>
                                             <v-row v-if="eventoClickCobrar == true">
-                                                <v-form @submit.prevent="cobrarPedidoMesaSeleccionada(listaMesa.IDMesa)"
+                                                <form @submit.prevent="cobrarPedidoMesaSeleccionada(listaMesa.IDMesa)"
                                                     :style="{ 'width': '100%' }">
                                                     <v-col cols="12">
                                                         <v-label>Forma de pago<span class="text-danger"> * </span></v-label>
-                                                        <v-select :items="listaFormaPago" item-text="fp_descripcion"
-                                                            v-model="selectFormaPago" item-value="IDFormaPago" required>
-                                                        </v-select>
+                                                        <v-autocomplete :items="listaFormaPago" item-text="fp_descripcion"
+                                                            v-model="selectFormaPago" item-value="IDFormaPago" required></v-autocomplete>
                                                     </v-col>
 
                                                     <v-col cols="12" v-if="selectFormaPago == 1">
                                                         <v-label>Ingresa monto<span class="text-danger"> * </span></v-label>
-                                                        <v-text-field type="number" :style="{ 'margin-top': '0px', 'padding-top': '0px' }"
-                                                            placeholder="Escribe el monto" :maxlength="3" min="0" v-model="montoEfectivo"></v-text-field>
+                                                        <v-text-field type="number"
+                                                            :style="{ 'margin-top': '0px', 'padding-top': '0px', 'margin-top': '16px' }"
+                                                            placeholder="Escribe el monto" :maxlength="3" min="0"
+                                                            :rules="ingresarMontoRules" v-model="montoEfectivo" required>
+                                                        </v-text-field>
                                                     </v-col>
 
                                                     <v-col cols="12">
-                                                        <v-btn type="submit" color="success" :style="{ 'width': '100%' }">
+                                                        <v-btn type="submit" color="success" :style="{ 'width': '100%' }"
+                                                            :disabled="manipularDisabledCobrarMonto">
                                                             Cobrar
                                                         </v-btn>
                                                     </v-col>
-                                                </v-form>
+                                                </form>
                                             </v-row>
-                                            <div v-if="eventoClickTomarPedido == true" :style="{'margin-top':'12px'}">
+                                            <div v-if="eventoClickTomarPedido == true" :style="{ 'margin-top': '12px' }">
                                                 <v-row>
                                                     <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                                                         <v-label>Categoría<span class="text-danger"> *
                                                             </span></v-label>
-                                                        <v-select :items="optionsCategorias" v-model="selectedCategory"
-                                                            @change="filterMe"></v-select>
+                                                        <v-autocomplete :items="optionsCategorias" v-model="selectedCategory"
+                                                            @change="filterMe"></v-autocomplete>
                                                     </v-col>
                                                     <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                                                         <v-label>Producto(s)<span class="text-danger"> *
                                                             </span></v-label>
-                                                        <v-select :items="listaProductos"
+                                                        <v-autocomplete :items="listaProductos"
                                                             item-text="nombre_productoLimpieza" v-model="selectProduct"
                                                             item-value="id_productoLimpieza" @change="changeProductoAdd"
                                                             required>
-                                                        </v-select>
+                                                        </v-autocomplete>
                                                     </v-col>
                                                 </v-row>
                                                 <v-row>
@@ -430,7 +438,8 @@
                                                         :style="{ 'text-align': 'right' }">
                                                         <v-btn color="success"
                                                             @click="valorMesaSeleccionada(listaMesa.IDMesa)"
-                                                            :style="{ 'width': '100%' }">
+                                                            :style="{ 'width': '100%' }"
+                                                            :disabled="manipularDisabledEnviarCocina">
                                                             Enviar a cocina
                                                         </v-btn>
                                                     </v-col>
@@ -480,6 +489,11 @@
 export default {
     name: 'Mesas',
     data: () => ({
+        ingresarMontoRules: [
+            v => !!v || 'Monto es requerido'
+        ],
+        manipularDisabledCobrarMonto: false,
+        manipularDisabledEnviarCocina: false,
         montoEfectivo: "",
         eventoClickVerCuenta: false,
         eventoClickCobrar: false,
@@ -653,7 +667,7 @@ export default {
             this.eventoClickCobrar = false;
             this.eventoClickTomarPedido = false;
             this.inicializarEstadosCerrar();
-            
+
             await this.axios({
                 url: 'http://192.168.18.5:8000/api/auth/getDatosCabeceraOrdenPedido',
                 method: 'GET',
@@ -669,7 +683,7 @@ export default {
                 .finally(() => (this.loading = false));
         },
         async cobrarPedidoMesaSeleccionada(idMesaSeleccionadaActual) {
-
+            this.manipularDisabledCobrarMonto = true;
             let valueFormaPago = this.selectFormaPago;
             let valueselectFormaPago = this.selectFormaPago;
             let valueVueltoPago = 0;
@@ -702,12 +716,13 @@ export default {
                         }
 
                         this.cambiarStatusMesa(jsonStatusMesa);
+                        this.manipularDisabledCobrarMonto = false;
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    alert('Error en la consulta: ' + error);
                 })
-                .finally(() => (this.loading = false));
+                .finally(() => (this.manipularDisabledCobrarMonto = false));
         },
         createCabeceraOrdenPedido(jsonCreateOrdenPedido) {
             this.axios({
@@ -743,8 +758,12 @@ export default {
 
                                 this.cambiarStatusMesa(jsonStatusMesa);
                                 this.datosCabeceraOrdenPedido = null;
+                                this.manipularDisabledEnviarCocina = false;
                             } else if (result.isDenied) {
-                                this.$swal('Orden de pedido no se pudo crear', '', 'info')
+                                this.$swal('Orden de pedido no se pudo crear', '', 'info');
+                                this.manipularDisabledEnviarCocina = false;
+                            } else {
+                                this.manipularDisabledEnviarCocina = false;
                             }
                         })
                     }
@@ -863,6 +882,7 @@ export default {
             }
         },
         valorMesaSeleccionada(mesaSeleccionada) {
+            this.manipularDisabledEnviarCocina = true;
             this.idMesaSelected = mesaSeleccionada;
             this.crearOrdenPedido();
         },
@@ -886,10 +906,10 @@ export default {
         },
         inicializarEstadosCerrar() {
             this.selectProduct = "";
-            this.montoEfectivo = 0;
+            this.montoEfectivo = "";
             this.selectFormaPago = "";
             this.listaProductosSeleccionados = [];
-        }
+        },
     }
 }
 </script>
