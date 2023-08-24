@@ -30,12 +30,12 @@
             <v-row>
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                     <h3 :style="{ 'font-weight': '900' }">Monto del último cuadre de caja:</h3>
-                    <v-text-field type="number" step="any" v-model="montoTotalUltimoCuadre" required>
+                    <v-text-field type="number" step="any" :disabled="true" v-model="listaTotalRegistrosCierreCaja.monto_total_ultimo_cuadre" required>
                     </v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                     <h3 :style="{ 'font-weight': '900' }">Suma total de gastos:</h3>
-                    <v-text-field type="number" step="any" v-model="montoTotalGastos" required>
+                    <v-text-field type="number" step="any" :disabled="true" v-model="listaTotalRegistrosCierreCaja.ga_monto_total_general" required>
                     </v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
@@ -56,7 +56,6 @@ export default {
         manipularDisabledCalcularCuadreCaja: false,
         listaTotalRegistrosCierreCaja: null,
         montoTotalUltimoCuadre: "",
-        montoTotalGastos: ""
     }),
     async mounted() {
         await this.totalRegistrosCierreCaja();
@@ -95,7 +94,7 @@ export default {
         },
         eventoCalcularCuadreCaja() {
             this.manipularDisabledCalcularCuadreCaja = true;
-            let calculoMontoCaja = (parseFloat(this.listaTotalRegistrosCierreCaja.cfac_monto_total_general) + parseFloat(this.montoTotalUltimoCuadre)) - parseFloat(this.montoTotalGastos);
+            let calculoMontoCaja = (parseFloat(this.listaTotalRegistrosCierreCaja.cfac_monto_total_general) + parseFloat(this.listaTotalRegistrosCierreCaja.monto_total_ultimo_cuadre)) - parseFloat(this.listaTotalRegistrosCierreCaja.ga_monto_total_general);
 
             this.$swal({
                 title: 'El monto es: ' + calculoMontoCaja + ', Quieres guardar los cambios?',
@@ -110,7 +109,6 @@ export default {
                     //this.listaTotalRegistrosCierreCaja.cfac_cantidades_total = [];
                     //this.listaTotalRegistrosCierreCaja.cfac_monto_total_general = 0;
                     this.montoTotalUltimoCuadre = "";
-                    this.montoTotalGastos = "";
                     this.manipularDisabledCalcularCuadreCaja = false;
                 } else if (result.isDenied) {
                     this.$swal('Datos no actualizados, verificar errores', '', 'info');
