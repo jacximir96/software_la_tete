@@ -37,20 +37,20 @@
                                             <v-row>
                                                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                                                     <v-label>Categoría<span class="text-danger"> * </span></v-label>
-                                                    <v-autocomplete :items="optionsCategorias" v-model="selectedCategory"
-                                                        @change="filterMe"></v-autocomplete>
+                                                    <v-select :items="optionsCategorias" v-model="selectedCategory"
+                                                        @change="filterMe"></v-select>
                                                 </v-col>
                                                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                                                     <v-label>Producto(s)<span class="text-danger"> * </span></v-label>
-                                                    <v-autocomplete :items="listaProductos" item-text="nombre_productoLimpieza"
+                                                    <v-select :items="listaProductos" item-text="nombre_productoLimpieza"
                                                         v-model="selectProduct" item-value="id_productoLimpieza"
                                                         @change="changeProductoAdd" required>
-                                                    </v-autocomplete>
+                                                    </v-select>
                                                 </v-col>
                                             </v-row>
                                             <v-row>
                                                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
-                                                    <v-text-field type="number" min="0" :value="1" :disabled="validateLoad"
+                                                    <v-text-field type="number" min="1" :value="1" :disabled="validateLoad"
                                                         v-model="cantidadPedido"></v-text-field>
                                                 </v-col>
                                                 <v-col cols="12" sm="6" md="6" lg="6" xl="6"
@@ -243,6 +243,14 @@
                                                                         :style="{ 'font-weight': '900', 'padding': '16px' }">
                                                                         Descripción
                                                                     </th>
+                                                                    <th class="text-left"
+                                                                        :style="{ 'font-weight': '900', 'padding': '16px' }">
+                                                                        Precio Unit.
+                                                                    </th>
+                                                                    <th class="text-left"
+                                                                        :style="{ 'font-weight': '900', 'padding': '16px' }">
+                                                                        Precio Tot.
+                                                                    </th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -251,6 +259,8 @@
                                                                     <td>{{ item.dop_cantidad }}</td>
                                                                     <td>{{ item.nombre_categoria }}</td>
                                                                     <td>{{ item.nombre_productoLimpieza }}</td>
+                                                                    <td>S/ {{ item.dop_precio }}</td>
+                                                                    <td>S/ {{ item.dop_total }}</td>
                                                                 </tr>
                                                             </tbody>
                                                         </template>
@@ -288,8 +298,9 @@
                                                     :style="{ 'width': '100%' }">
                                                     <v-col cols="12">
                                                         <v-label>Forma de pago<span class="text-danger"> * </span></v-label>
-                                                        <v-autocomplete :items="listaFormaPago" item-text="fp_descripcion"
-                                                            v-model="selectFormaPago" item-value="IDFormaPago" required></v-autocomplete>
+                                                        <v-select :items="listaFormaPago" item-text="fp_descripcion"
+                                                            v-model="selectFormaPago" item-value="IDFormaPago"
+                                                            required></v-select>
                                                     </v-col>
 
                                                     <v-col cols="12" v-if="selectFormaPago == 1">
@@ -314,22 +325,22 @@
                                                     <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                                                         <v-label>Categoría<span class="text-danger"> *
                                                             </span></v-label>
-                                                        <v-autocomplete :items="optionsCategorias" v-model="selectedCategory"
-                                                            @change="filterMe"></v-autocomplete>
+                                                        <v-select :items="optionsCategorias" v-model="selectedCategory"
+                                                            @change="filterMe"></v-select>
                                                     </v-col>
                                                     <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                                                         <v-label>Producto(s)<span class="text-danger"> *
                                                             </span></v-label>
-                                                        <v-autocomplete :items="listaProductos"
+                                                        <v-select :items="listaProductos"
                                                             item-text="nombre_productoLimpieza" v-model="selectProduct"
                                                             item-value="id_productoLimpieza" @change="changeProductoAdd"
                                                             required>
-                                                        </v-autocomplete>
+                                                        </v-select>
                                                     </v-col>
                                                 </v-row>
                                                 <v-row>
                                                     <v-col cols="12" sm="6" md="6" lg="6" xl="6">
-                                                        <v-text-field type="number" min="0" :value="1"
+                                                        <v-text-field type="number" min="1" :value="1"
                                                             :disabled="validateLoad"
                                                             v-model="cantidadPedido"></v-text-field>
                                                     </v-col>
@@ -725,27 +736,27 @@ export default {
                 .finally(() => (this.manipularDisabledCobrarMonto = false));
         },
         createCabeceraOrdenPedido(jsonCreateOrdenPedido) {
-            this.axios({
-                url: 'http://192.168.18.5:8000/api/auth/createOrdenPedido',
-                method: 'GET',
-                async: false,
-                params: {
-                    "odp_monto_total": jsonCreateOrdenPedido.odp_monto_total,
-                    "IDMesa": jsonCreateOrdenPedido.IDMesa,
-                    "IDStatus": 3,
-                    "detalleOrdenPedido": jsonCreateOrdenPedido.detalleOrdenPedido
-                }
-            })
-                .then(response => {
-                    if (response.status == 200) {
-                        this.$swal({
-                            title: 'Quieres guardar los cambios?',
-                            showDenyButton: true,
-                            showCancelButton: true,
-                            confirmButtonText: 'Guardar',
-                            denyButtonText: `No guardar`,
-                        }).then((result) => {
-                            if (result.isConfirmed) {
+            this.$swal({
+                title: 'Quieres guardar los cambios?',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'Guardar',
+                denyButtonText: `No guardar`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.axios({
+                        url: 'http://192.168.18.5:8000/api/auth/createOrdenPedido',
+                        method: 'GET',
+                        async: false,
+                        params: {
+                            "odp_monto_total": jsonCreateOrdenPedido.odp_monto_total,
+                            "IDMesa": jsonCreateOrdenPedido.IDMesa,
+                            "IDStatus": 3,
+                            "detalleOrdenPedido": jsonCreateOrdenPedido.detalleOrdenPedido
+                        }
+                    })
+                        .then(response => {
+                            if (response.status == 200) {
                                 this.$swal('Orden de pedido creada correctamente', '', 'success')
                                 this.listaMesa.mesa_modelo = false;
                                 this.initialize();
@@ -759,19 +770,19 @@ export default {
                                 this.cambiarStatusMesa(jsonStatusMesa);
                                 this.datosCabeceraOrdenPedido = null;
                                 this.manipularDisabledEnviarCocina = false;
-                            } else if (result.isDenied) {
-                                this.$swal('Orden de pedido no se pudo crear', '', 'info');
-                                this.manipularDisabledEnviarCocina = false;
-                            } else {
-                                this.manipularDisabledEnviarCocina = false;
                             }
                         })
-                    }
-                })
-                .catch(function (error) {
-                    alert("Error en el sistema, comunicate con soporte técnico");
-                })
-                .finally(() => (this.loading = false));
+                        .catch(function (error) {
+                            alert("Error en el sistema, comunicate con soporte técnico");
+                        })
+                        .finally(() => (this.loading = false));
+                } else if (result.isDenied) {
+                    this.$swal('Orden de pedido no se pudo crear', '', 'info');
+                    this.manipularDisabledEnviarCocina = false;
+                } else {
+                    this.manipularDisabledEnviarCocina = false;
+                }
+            })
         },
         filterMe() {
             this.listaCategorias.filter(function (el) {
