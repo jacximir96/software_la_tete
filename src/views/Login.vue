@@ -99,7 +99,7 @@ export default
                 };
 
                 this.axios
-                .post('http://localhost/software_la_tete_administrador/public/api/auth/iniciarSesion', payload,
+                .post('http://161.22.40.50/software_la_tete_administrador/public/api/auth/iniciarSesion', payload,
                         {
                             headers: {
                                 "Access-Control-Allow-Origin": "*"
@@ -108,7 +108,7 @@ export default
                     .then(response => (this.accesoUsuario = response.data.data))
 
                 this.axios
-                .get('http://localhost/software_la_tete_administrador/public/api/auth/listarMesas')
+                .get('http://161.22.40.50/software_la_tete_administrador/public/api/auth/listarMesas')
                     .then(response => (this.listaMesas = response.data.data))
             }
         }

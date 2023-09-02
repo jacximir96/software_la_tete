@@ -583,7 +583,7 @@ export default {
     methods: {
         async getListMesas() {
             await this.axios({
-                url: 'http://localhost/software_la_tete_administrador/public/api/auth/listarMesas',
+                url: 'http://161.22.40.50/software_la_tete_administrador/public/api/auth/listarMesas',
                 method: 'GET',
                 async: false
             })
@@ -597,7 +597,7 @@ export default {
         },
         async getListCategorias() {
             await this.axios({
-                url: 'http://localhost/software_la_tete_administrador/public/api/auth/listarCategorias',
+                url: 'http://161.22.40.50/software_la_tete_administrador/public/api/auth/listarCategorias',
                 method: 'GET',
                 async: false
             })
@@ -611,7 +611,7 @@ export default {
         },
         async getListProductos(idCategoriaSelected) {
             await this.axios({
-                url: 'http://localhost/software_la_tete_administrador/public/api/auth/listarProductoPorCategoria',
+                url: 'http://161.22.40.50/software_la_tete_administrador/public/api/auth/listarProductoPorCategoria',
                 method: 'GET',
                 async: false,
                 params: { idCategoriaSelected }
@@ -626,7 +626,7 @@ export default {
         },
         async getListFormaPago() {
             await this.axios({
-                url: 'http://localhost/software_la_tete_administrador/public/api/auth/listarFormaPago',
+                url: 'http://161.22.40.50/software_la_tete_administrador/public/api/auth/listarFormaPago',
                 method: 'GET',
                 async: false
             })
@@ -640,7 +640,7 @@ export default {
         },
         async cambiarStatusMesa(jsonStatusMesa) {
             await this.axios({
-                url: 'http://localhost/software_la_tete_administrador/public/api/auth/cambiarStatusMesa',
+                url: 'http://161.22.40.50/software_la_tete_administrador/public/api/auth/cambiarStatusMesa',
                 method: 'GET',
                 async: false,
                 params: {
@@ -658,7 +658,7 @@ export default {
         },
         async getProductoById(idProductoSelected) {
             await this.axios({
-                url: 'http://localhost/software_la_tete_administrador/public/api/auth/getProductoById',
+                url: 'http://161.22.40.50/software_la_tete_administrador/public/api/auth/getProductoById',
                 method: 'GET',
                 async: false,
                 params: { idProductoSelected }
@@ -679,7 +679,7 @@ export default {
             this.inicializarEstadosCerrar();
 
             await this.axios({
-                url: 'http://localhost/software_la_tete_administrador/public/api/auth/getDatosCabeceraOrdenPedido',
+                url: 'http://161.22.40.50/software_la_tete_administrador/public/api/auth/getDatosCabeceraOrdenPedido',
                 method: 'GET',
                 async: false,
                 params: { idMesaSeleccionadaActual }
@@ -700,7 +700,7 @@ export default {
             let valueMontoEfectivo = this.montoEfectivo;
 
             await this.axios({
-                url: 'http://localhost/software_la_tete_administrador/public/api/auth/cobrarPedidoMesaSeleccionada',
+                url: 'http://161.22.40.50/software_la_tete_administrador/public/api/auth/cobrarPedidoMesaSeleccionada',
                 method: 'GET',
                 async: false,
                 params: { idMesaSeleccionadaActual, valueFormaPago }
@@ -744,7 +744,7 @@ export default {
             }).then((result) => {
                 if (result.isConfirmed) {
                     this.axios({
-                        url: 'http://localhost/software_la_tete_administrador/public/api/auth/createOrdenPedido',
+                        url: 'http://161.22.40.50/software_la_tete_administrador/public/api/auth/createOrdenPedido',
                         method: 'GET',
                         async: false,
                         params: {
