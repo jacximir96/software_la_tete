@@ -1,6 +1,13 @@
 <template>
     <v-container>
         <v-row>
+            <v-btn type="button" color="primary" :style="{ 'width': '100%' }"
+                :disabled="manipularDisabledCalcularCuadreCaja" @click="iniciarPeriodoVenta">
+                Iniciar periodo de venta
+            </v-btn>
+        </v-row>
+
+        <v-row>
             <v-col cols="12">
                 <h3 :style="{ 'font-weight': '900' }">Montos generales antes de cerrar caja para un mejor control.</h3>
             </v-col>
@@ -63,7 +70,7 @@ export default {
     methods: {
         async totalRegistrosCierreCaja() {
             await this.axios({
-                url: 'http://192.168.18.5:8000/api/auth/totalRegistrosCierreCaja',
+                url: 'http://localhost:8000/api/auth/totalRegistrosCierreCaja',
                 method: 'GET',
                 async: false
             })
@@ -77,7 +84,7 @@ export default {
         },
         async actualizarTotalRegistrosCierreCaja(calculoMontoCaja) {
             await this.axios({
-                url: 'http://192.168.18.5:8000/api/auth/actualizarTotalRegistrosCierreCaja',
+                url: 'http://localhost:8000/api/auth/actualizarTotalRegistrosCierreCaja',
                 method: 'GET',
                 async: false,
                 params: {
@@ -115,6 +122,31 @@ export default {
                     this.manipularDisabledCalcularCuadreCaja = false;
                 } else {
                     this.manipularDisabledCalcularCuadreCaja = false;
+                }
+            })
+        },
+        iniciarPeriodoVenta() {
+            console.log("Iniciar periodo de ventas");
+
+            this.$swal({
+                title: 'Se va a iniciar un nuevo periodo, Quieres guardar los cambios?',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'Iniciar',
+                denyButtonText: `No iniciar`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    //this.$swal('Datos actualizados correctamente', '', 'success')
+                    //this.actualizarTotalRegistrosCierreCaja(calculoMontoCaja);
+                    //this.listaTotalRegistrosCierreCaja.cfac_cantidades_total = [];
+                    //this.listaTotalRegistrosCierreCaja.cfac_monto_total_general = 0;
+                    //this.montoTotalUltimoCuadre = "";
+                    //this.manipularDisabledCalcularCuadreCaja = false;
+                } else if (result.isDenied) {
+                    this.$swal('No se creó un periodo de venta', '', 'info');
+                    this.manipularDisabledCalcularCuadreCaja = false;
+                } else {
+                    //this.manipularDisabledCalcularCuadreCaja = false;
                 }
             })
         }

@@ -1,7 +1,6 @@
 <template>
     <v-tabs v-model="tab" background-color="indigo" centered dark icons-and-text center>
         <v-tab href="#tab-1">Mesas</v-tab>
-        <!-- <v-tab>Delivery</v-tab> -->
         <v-tab href="#tab-2">Para llevar</v-tab>
 
         <v-tabs-items v-model="tab">
@@ -584,7 +583,7 @@ export default {
     methods: {
         async getListMesas() {
             await this.axios({
-                url: 'http://192.168.18.5:8000/api/auth/listarMesas',
+                url: 'http://localhost:8000/api/auth/listarMesas',
                 method: 'GET',
                 async: false
             })
@@ -598,7 +597,7 @@ export default {
         },
         async getListCategorias() {
             await this.axios({
-                url: 'http://192.168.18.5:8000/api/auth/listarCategorias',
+                url: 'http://localhost:8000/api/auth/listarCategorias',
                 method: 'GET',
                 async: false
             })
@@ -612,7 +611,7 @@ export default {
         },
         async getListProductos(idCategoriaSelected) {
             await this.axios({
-                url: 'http://192.168.18.5:8000/api/auth/listarProductoPorCategoria',
+                url: 'http://localhost:8000/api/auth/listarProductoPorCategoria',
                 method: 'GET',
                 async: false,
                 params: { idCategoriaSelected }
@@ -627,7 +626,7 @@ export default {
         },
         async getListFormaPago() {
             await this.axios({
-                url: 'http://192.168.18.5:8000/api/auth/listarFormaPago',
+                url: 'http://localhost:8000/api/auth/listarFormaPago',
                 method: 'GET',
                 async: false
             })
@@ -641,7 +640,7 @@ export default {
         },
         async cambiarStatusMesa(jsonStatusMesa) {
             await this.axios({
-                url: 'http://192.168.18.5:8000/api/auth/cambiarStatusMesa',
+                url: 'http://localhost:8000/api/auth/cambiarStatusMesa',
                 method: 'GET',
                 async: false,
                 params: {
@@ -659,7 +658,7 @@ export default {
         },
         async getProductoById(idProductoSelected) {
             await this.axios({
-                url: 'http://192.168.18.5:8000/api/auth/getProductoById',
+                url: 'http://localhost:8000/api/auth/getProductoById',
                 method: 'GET',
                 async: false,
                 params: { idProductoSelected }
@@ -680,7 +679,7 @@ export default {
             this.inicializarEstadosCerrar();
 
             await this.axios({
-                url: 'http://192.168.18.5:8000/api/auth/getDatosCabeceraOrdenPedido',
+                url: 'http://localhost:8000/api/auth/getDatosCabeceraOrdenPedido',
                 method: 'GET',
                 async: false,
                 params: { idMesaSeleccionadaActual }
@@ -701,7 +700,7 @@ export default {
             let valueMontoEfectivo = this.montoEfectivo;
 
             await this.axios({
-                url: 'http://192.168.18.5:8000/api/auth/cobrarPedidoMesaSeleccionada',
+                url: 'http://localhost:8000/api/auth/cobrarPedidoMesaSeleccionada',
                 method: 'GET',
                 async: false,
                 params: { idMesaSeleccionadaActual, valueFormaPago }
@@ -745,7 +744,7 @@ export default {
             }).then((result) => {
                 if (result.isConfirmed) {
                     this.axios({
-                        url: 'http://192.168.18.5:8000/api/auth/createOrdenPedido',
+                        url: 'http://localhost:8000/api/auth/createOrdenPedido',
                         method: 'GET',
                         async: false,
                         params: {
