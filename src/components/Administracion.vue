@@ -70,7 +70,7 @@ export default {
     methods: {
         async totalRegistrosCierreCaja() {
             await this.axios({
-                url: 'http://161.22.40.50/software_la_tete_administrador/public/api/auth/totalRegistrosCierreCaja',
+                url: process.env.VUE_APP_DIRECCION_API_ADMINISTRADOR + '/software_la_tete_administrador/public/api/auth/totalRegistrosCierreCaja',
                 method: 'GET',
                 async: false
             })
@@ -84,7 +84,7 @@ export default {
         },
         async actualizarTotalRegistrosCierreCaja(calculoMontoCaja) {
             await this.axios({
-                url: 'http://161.22.40.50/software_la_tete_administrador/public/api/auth/actualizarTotalRegistrosCierreCaja',
+                url: process.env.VUE_APP_DIRECCION_API_ADMINISTRADOR + '/software_la_tete_administrador/public/api/auth/actualizarTotalRegistrosCierreCaja',
                 method: 'GET',
                 async: false,
                 params: {
