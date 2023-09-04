@@ -99,7 +99,7 @@ export default
                 };
 
                 this.axios
-                .post(process.env.VUE_APP_DIRECCION_API_ADMINISTRADOR + '/software_la_tete_administrador/public/api/auth/iniciarSesion', payload,
+                .post(process.env.VUE_APP_DIRECCION_API_ADMINISTRADOR + '/api/auth/iniciarSesion', payload,
                         {
                             headers: {
                                 "Access-Control-Allow-Origin": "*"
@@ -108,7 +108,7 @@ export default
                     .then(response => (this.accesoUsuario = response.data.data))
 
                 this.axios
-                .get(process.env.VUE_APP_DIRECCION_API_ADMINISTRADOR + '/software_la_tete_administrador/public/api/auth/listarMesas')
+                .get(process.env.VUE_APP_DIRECCION_API_ADMINISTRADOR + '/api/auth/listarMesas')
                     .then(response => (this.listaMesas = response.data.data))
             }
         }
