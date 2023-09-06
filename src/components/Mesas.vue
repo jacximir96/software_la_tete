@@ -1,5 +1,5 @@
 <template>
-    <v-tabs v-model="tab" background-color="indigo" centered dark icons-and-text center>
+    <v-tabs v-model="tab" background-color="indigo" centered dark icons-and-text center v-if="periodoAbiertoValidacion == true">
         <v-tab href="#tab-1">Mesas</v-tab>
         <v-tab href="#tab-2">Para llevar</v-tab>
 
@@ -502,6 +502,7 @@ export default {
         ingresarMontoRules: [
             v => !!v || 'Monto es requerido'
         ],
+        periodoAbiertoValidacion: false,
         manipularDisabledCobrarMonto: false,
         manipularDisabledEnviarCocina: false,
         montoEfectivo: "",
@@ -554,6 +555,7 @@ export default {
     }),
     async mounted() {
         this.loading = true;
+        await this.verificarPeriodoActivo();
         await this.getListCategorias();
         await this.getListMesas();
         await this.getListProductos(this.selectedCategory);
@@ -733,6 +735,24 @@ export default {
                     alert('Error en la consulta: ' + error);
                 })
                 .finally(() => (this.manipularDisabledCobrarMonto = false));
+        },
+        async verificarPeriodoActivo() {
+            await this.axios({
+                url: process.env.VUE_APP_DIRECCION_API_ADMINISTRADOR + '/api/auth/verificarPeriodoActivo',
+                method: 'GET',
+                async: false
+            })
+                .then(response => {
+                    if (response.data.data.length > 0) {
+                        this.periodoAbiertoValidacion = true;
+                    } else {
+                        this.periodoAbiertoValidacion = false;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+                .finally(() => (this.loading = false));
         },
         createCabeceraOrdenPedido(jsonCreateOrdenPedido) {
             this.$swal({

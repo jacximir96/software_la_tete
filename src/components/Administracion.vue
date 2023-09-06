@@ -1,13 +1,13 @@
 <template>
     <v-container>
-        <v-row>
+        <v-row v-if="periodoAbiertoValidacion == false">
             <v-btn type="button" color="primary" :style="{ 'width': '100%' }"
                 :disabled="manipularDisabledCalcularCuadreCaja" @click="iniciarPeriodoVenta">
                 Iniciar periodo de venta
             </v-btn>
         </v-row>
 
-        <v-row>
+        <v-row v-if="periodoAbiertoValidacion == true">
             <v-col cols="12">
                 <h3 :style="{ 'font-weight': '900' }">Montos generales antes de cerrar caja para un mejor control.</h3>
             </v-col>
@@ -33,7 +33,7 @@
                 </h3>
             </v-col>
         </v-row>
-        <form @submit.prevent="eventoCalcularCuadreCaja()">
+        <form v-if="periodoAbiertoValidacion == true" @submit.prevent="eventoCalcularCuadreCaja()">
             <v-row>
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                     <h3 :style="{ 'font-weight': '900' }">Monto del último cuadre de caja:</h3>
@@ -60,11 +60,13 @@
 export default {
     name: 'Administracion',
     data: () => ({
+        periodoAbiertoValidacion: false,
         manipularDisabledCalcularCuadreCaja: false,
         listaTotalRegistrosCierreCaja: null,
         montoTotalUltimoCuadre: "",
     }),
     async mounted() {
+        await this.verificarPeriodoActivo();
         await this.totalRegistrosCierreCaja();
     },
     methods: {
@@ -99,6 +101,41 @@ export default {
                 })
                 .finally(() => (this.loading = false));
         },
+        async abrirPeriodoVenta() {
+            await this.axios({
+                url: process.env.VUE_APP_DIRECCION_API_ADMINISTRADOR + '/api/auth/abrirPeriodoVenta',
+                method: 'GET',
+                async: false
+            })
+                .then(response => {
+                    if (response.status == 200) {
+                        this.periodoAbiertoValidacion = true;
+                        this.$swal('Periodo generado correctamente', '', 'success')
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+                .finally(() => (this.loading = false));
+        },
+        async verificarPeriodoActivo() {
+            await this.axios({
+                url: process.env.VUE_APP_DIRECCION_API_ADMINISTRADOR + '/api/auth/verificarPeriodoActivo',
+                method: 'GET',
+                async: false
+            })
+                .then(response => {
+                    if (response.data.data.length > 0) {
+                        this.periodoAbiertoValidacion = true;
+                    } else {
+                        this.periodoAbiertoValidacion = false;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+                .finally(() => (this.loading = false));
+        },
         eventoCalcularCuadreCaja() {
             this.manipularDisabledCalcularCuadreCaja = true;
             let calculoMontoCaja = (parseFloat(this.listaTotalRegistrosCierreCaja.cfac_monto_total_general) + parseFloat(this.listaTotalRegistrosCierreCaja.monto_total_ultimo_cuadre)) - parseFloat(this.listaTotalRegistrosCierreCaja.ga_monto_total_general);
@@ -113,21 +150,20 @@ export default {
                 if (result.isConfirmed) {
                     this.$swal('Datos actualizados correctamente', '', 'success')
                     this.actualizarTotalRegistrosCierreCaja(calculoMontoCaja);
-                    //this.listaTotalRegistrosCierreCaja.cfac_cantidades_total = [];
-                    //this.listaTotalRegistrosCierreCaja.cfac_monto_total_general = 0;
                     this.montoTotalUltimoCuadre = "";
                     this.manipularDisabledCalcularCuadreCaja = false;
+                    this.periodoAbiertoValidacion = false;
                 } else if (result.isDenied) {
                     this.$swal('Datos no actualizados, verificar errores', '', 'info');
                     this.manipularDisabledCalcularCuadreCaja = false;
+                    this.periodoAbiertoValidacion = true;
                 } else {
                     this.manipularDisabledCalcularCuadreCaja = false;
+                    this.periodoAbiertoValidacion = true;
                 }
             })
         },
         iniciarPeriodoVenta() {
-            console.log("Iniciar periodo de ventas");
-
             this.$swal({
                 title: 'Se va a iniciar un nuevo periodo, Quieres guardar los cambios?',
                 showDenyButton: true,
@@ -136,17 +172,12 @@ export default {
                 denyButtonText: `No iniciar`,
             }).then((result) => {
                 if (result.isConfirmed) {
-                    //this.$swal('Datos actualizados correctamente', '', 'success')
-                    //this.actualizarTotalRegistrosCierreCaja(calculoMontoCaja);
-                    //this.listaTotalRegistrosCierreCaja.cfac_cantidades_total = [];
-                    //this.listaTotalRegistrosCierreCaja.cfac_monto_total_general = 0;
-                    //this.montoTotalUltimoCuadre = "";
-                    //this.manipularDisabledCalcularCuadreCaja = false;
+                    this.abrirPeriodoVenta();
                 } else if (result.isDenied) {
                     this.$swal('No se creó un periodo de venta', '', 'info');
-                    this.manipularDisabledCalcularCuadreCaja = false;
+                    this.periodoAbiertoValidacion = false;
                 } else {
-                    //this.manipularDisabledCalcularCuadreCaja = false;
+                    this.periodoAbiertoValidacion = false;
                 }
             })
         }
