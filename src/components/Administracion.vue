@@ -46,6 +46,21 @@
                     </v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
+                    <h3 :style="{ 'font-weight': '900', 'color': 'red' }">Suma total de efectivo (obligatorio):</h3>
+                    <v-text-field type="number" step=".01" v-model="cantidadSumaTotalEfectivo" required>
+                    </v-text-field>
+                </v-col>
+                <v-col cols="12" sm="12" md="6" lg="6" xl="6">
+                    <h3 :style="{ 'font-weight': '900', 'color': 'red' }">Suma total de izipay (obligatorio):</h3>
+                    <v-text-field type="number" step=".01" v-model="cantidadSumaTotalIzipay" required>
+                    </v-text-field>
+                </v-col>
+                <v-col cols="12" sm="12" md="6" lg="6" xl="6">
+                    <h3 :style="{ 'font-weight': '900', 'color': 'red' }">Suma total de interbank (obligatorio):</h3>
+                    <v-text-field type="number" step=".01" v-model="cantidadSumaTotalInterbank" required>
+                    </v-text-field>
+                </v-col>
+                <v-col cols="12">
                     <v-btn type="submit" color="success" :style="{ 'width': '100%' }"
                         :disabled="manipularDisabledCalcularCuadreCaja">
                         Calcular cuadre de caja
@@ -64,6 +79,9 @@ export default {
         manipularDisabledCalcularCuadreCaja: false,
         listaTotalRegistrosCierreCaja: null,
         montoTotalUltimoCuadre: "",
+        cantidadSumaTotalEfectivo: "",
+        cantidadSumaTotalIzipay: "",
+        cantidadSumaTotalInterbank: ""
     }),
     async mounted() {
         await this.verificarPeriodoActivo();
@@ -84,13 +102,16 @@ export default {
                 })
                 .finally(() => (this.loading = false));
         },
-        async actualizarTotalRegistrosCierreCaja(calculoMontoCaja) {
+        async actualizarTotalRegistrosCierreCaja(calculoMontoCaja,cantidadSumaTotalEfectivo,cantidadSumaTotalIzipay,cantidadSumaTotalInterbank) {
             await this.axios({
                 url: process.env.VUE_APP_DIRECCION_API_ADMINISTRADOR + '/api/auth/actualizarTotalRegistrosCierreCaja',
                 method: 'GET',
                 async: false,
                 params: {
-                    "calculoMontoCaja": calculoMontoCaja
+                    "calculoMontoCaja": calculoMontoCaja,
+                    "cantidadSumaTotalEfectivo": cantidadSumaTotalEfectivo,
+                    "cantidadSumaTotalIzipay": cantidadSumaTotalIzipay,
+                    "cantidadSumaTotalInterbank": cantidadSumaTotalInterbank
                 }
             })
                 .then(response => {
@@ -139,6 +160,9 @@ export default {
         eventoCalcularCuadreCaja() {
             this.manipularDisabledCalcularCuadreCaja = true;
             let calculoMontoCaja = (parseFloat(this.listaTotalRegistrosCierreCaja.cfac_monto_total_general) + parseFloat(this.listaTotalRegistrosCierreCaja.monto_total_ultimo_cuadre)) - parseFloat(this.listaTotalRegistrosCierreCaja.ga_monto_total_general);
+            let cantidadSumaTotalEfectivo = this.cantidadSumaTotalEfectivo;
+            let cantidadSumaTotalIzipay = this.cantidadSumaTotalIzipay;
+            let cantidadSumaTotalInterbank = this.cantidadSumaTotalInterbank;
 
             this.$swal({
                 title: 'El monto es: ' + calculoMontoCaja + ', Quieres guardar los cambios?',
@@ -149,7 +173,7 @@ export default {
             }).then((result) => {
                 if (result.isConfirmed) {
                     this.$swal('Datos actualizados correctamente', '', 'success')
-                    this.actualizarTotalRegistrosCierreCaja(calculoMontoCaja);
+                    this.actualizarTotalRegistrosCierreCaja(calculoMontoCaja,cantidadSumaTotalEfectivo,cantidadSumaTotalIzipay,cantidadSumaTotalInterbank);
                     this.montoTotalUltimoCuadre = "";
                     this.manipularDisabledCalcularCuadreCaja = false;
                     this.periodoAbiertoValidacion = false;

@@ -68,12 +68,12 @@
                                                         <v-spacer></v-spacer>
                                                         <v-dialog v-model="dialog" max-width="500px">
                                                             <template v-slot:activator="{ on, attrs }">
-                                                                <v-btn color="primary" @click="initialize">
-                                                                    Limpiar
-                                                                </v-btn>
-                                                                <v-btn class="ma-2" color="warning"
+                                                                <v-btn class="ma-2" color="success"
                                                                     @click="almacenarListaPedido" :disabled="isButtonValid">
                                                                     Añadir
+                                                                </v-btn>
+                                                                <v-btn color="error" @click="initialize">
+                                                                    Limpiar
                                                                 </v-btn>
                                                             </template>
                                                             <v-card>
@@ -153,7 +153,7 @@
                                                 </v-col>
                                                 <v-col cols="12" sm="6" md="6" lg="6" xl="6"
                                                     :style="{ 'text-align': 'right' }">
-                                                    <v-btn color="success" @click="valorMesaSeleccionada(listaMesa.IDMesa)"
+                                                    <v-btn color="primary" @click="valorMesaSeleccionada(listaMesa.IDMesa)"
                                                         :style="{ 'width': '100%' }"
                                                         :disabled="manipularDisabledEnviarCocina">
                                                         Enviar a cocina
@@ -358,13 +358,13 @@
                                                             <v-spacer></v-spacer>
                                                             <v-dialog v-model="dialog" max-width="500px">
                                                                 <template v-slot:activator="{ on, attrs }">
-                                                                    <v-btn color="primary" @click="initialize">
-                                                                        Limpiar
-                                                                    </v-btn>
-                                                                    <v-btn class="ma-2" color="warning"
+                                                                    <v-btn class="ma-2" color="success"
                                                                         @click="almacenarListaPedido"
                                                                         :disabled="isButtonValid">
                                                                         Añadir
+                                                                    </v-btn>
+                                                                    <v-btn color="error" @click="initialize">
+                                                                        Limpiar
                                                                     </v-btn>
                                                                 </template>
                                                                 <v-card>
@@ -446,7 +446,7 @@
                                                     </v-col>
                                                     <v-col cols="12" sm="6" md="6" lg="6" xl="6"
                                                         :style="{ 'text-align': 'right' }">
-                                                        <v-btn color="success"
+                                                        <v-btn color="primary"
                                                             @click="valorMesaSeleccionada(listaMesa.IDMesa)"
                                                             :style="{ 'width': '100%' }"
                                                             :disabled="manipularDisabledEnviarCocina">
