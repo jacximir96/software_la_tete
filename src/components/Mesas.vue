@@ -908,6 +908,8 @@ export default {
                     title: 'Error...',
                     text: 'No se puede agregar una lista vacia!'
                 })
+
+                this.manipularDisabledEnviarCocina = false;
             } else {
                 let arregloDetalleOrdenPedido = [];
 
