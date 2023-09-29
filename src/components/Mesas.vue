@@ -192,7 +192,13 @@
                                                         Cobrar
                                                     </v-btn>
                                                 </v-col>
-                                                <v-col cols="12">
+                                                <v-col cols="12" sm="6" md="6" lg="6" xl="6">
+                                                    <v-btn color="secondary" :style="{ 'width': '100%' }"
+                                                        @click="eventoCobrarMontoCuentaSeparada()">
+                                                        Cuentas separadas
+                                                    </v-btn>
+                                                </v-col>
+                                                <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                                                     <v-btn color="error" :style="{ 'width': '100%' }"
                                                         @click="eventoAumentarPedido()">
                                                         Añadir nuevo pedido
@@ -201,7 +207,7 @@
                                             </v-row>
 
                                             <v-divider :style="{ 'margin-top': '10px', 'margin-bottom': '10px' }"
-                                                v-if="eventoClickVerCuenta == true || eventoClickCobrar == true || eventoClickTomarPedido == true"></v-divider>
+                                                v-if="eventoClickVerCuenta == true || eventoClickCobrar == true || eventoClickTomarPedido == true || eventoClickCobrarCuentaSeparada == true"></v-divider>
 
                                             <v-row v-for="datoCabeceraOrdenPedido in datosCabeceraOrdenPedido"
                                                 v-if="eventoClickVerCuenta == true">
@@ -276,7 +282,7 @@
                                                     }}</p>
                                                 </v-col>
 
-                                                <v-form @submit.prevent :style="{ 'width': '100%' }">
+                                                <!-- <v-form @submit.prevent :style="{ 'width': '100%' }">
                                                     <v-col cols="12">
                                                         <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Enviar
                                                             por
@@ -290,7 +296,9 @@
                                                             Enviar cuenta
                                                         </v-btn>
                                                     </v-col>
-                                                </v-form>
+                                                </v-form> -->
+                                            </v-row>
+                                            <v-row v-if="eventoClickCobrarCuentaSeparada == true">
                                             </v-row>
                                             <v-row v-if="eventoClickCobrar == true">
                                                 <form @submit.prevent="cobrarPedidoMesaSeleccionada(listaMesa.IDMesa)"
@@ -502,12 +510,17 @@ export default {
         ingresarMontoRules: [
             v => !!v || 'Monto es requerido'
         ],
+        ingresarCantidadCuentaSeparadaRules: [
+            v => !!v || 'Cantidad es requerida'
+        ],
         periodoAbiertoValidacion: false,
         manipularDisabledCobrarMonto: false,
         manipularDisabledEnviarCocina: false,
         montoEfectivo: "",
+        cantidadCuentaSeparada: "",
         eventoClickVerCuenta: false,
         eventoClickCobrar: false,
+        eventoClickCobrarCuentaSeparada: false,
         eventoClickTomarPedido: false,
         tab: null,
         datosCabeceraOrdenPedido: null,
@@ -677,6 +690,7 @@ export default {
         async getDatosCabeceraOrdenPedido(idMesaSeleccionadaActual) {
             this.eventoClickVerCuenta = !this.eventoClickVerCuenta;
             this.eventoClickCobrar = false;
+            this.eventoClickCobrarCuentaSeparada = false;
             this.eventoClickTomarPedido = false;
             this.inicializarEstadosCerrar();
 
@@ -918,14 +932,22 @@ export default {
         },
         eventoCobrarMonto() {
             this.eventoClickCobrar = !this.eventoClickCobrar;
+            this.eventoClickCobrarCuentaSeparada = false;
             this.eventoClickVerCuenta = false;
             this.eventoClickTomarPedido = false;
             this.inicializarEstadosCerrar();
+        },
+        eventoCobrarMontoCuentaSeparada() {
+            this.eventoClickCobrarCuentaSeparada = !this.eventoClickCobrarCuentaSeparada;
+            this.eventoClickCobrar = false;
+            this.eventoClickVerCuenta = false;
+            this.eventoClickTomarPedido = false;
         },
         eventoAumentarPedido() {
             this.eventoClickTomarPedido = !this.eventoClickTomarPedido;
             this.eventoClickVerCuenta = false;
             this.eventoClickCobrar = false;
+            this.eventoClickCobrarCuentaSeparada = false;
             this.inicializarEstadosCerrar();
         },
         inicializarBotones() {
@@ -939,6 +961,7 @@ export default {
             this.montoEfectivo = "";
             this.selectFormaPago = "";
             this.listaProductosSeleccionados = [];
+            this.cantidadCuentaSeparada = "";
         },
     }
 }
