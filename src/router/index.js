@@ -4,7 +4,9 @@ import HomeView from '../views/HomeView.vue'
 import Mesas from '../components/Mesas.vue'
 import Cocina from '../components/Cocina.vue'
 import Administracion from '../components/Administracion.vue'
-import Login from '../views/Login.vue'
+import Login from '../components/Login.vue'
+import Gastos from '../components/Gastos.vue'
+import Dashboard from '../views/Dashboard.vue'
 
 Vue.use(VueRouter)
 
@@ -33,6 +35,16 @@ const routes = [
     path: '/administracion',
     name: 'administracion',
     component: Administracion
+  },
+  {
+    path: '/gastos',
+    name: 'gastos',
+    component: Gastos
+  },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: Dashboard
   }
 ]
 

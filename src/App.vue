@@ -1,6 +1,6 @@
 <template>
     <v-app id="inspire" dark>
-        <v-navigation-drawer v-model="drawer" :clipped="$vuetify.breakpoint.lgAndUp" app dark>
+        <v-navigation-drawer v-model="drawer" :clipped="$vuetify.breakpoint.lgAndUp" app dark v-if="valorRuta != '/'">
             <v-list dense>
                 <template>
                     <v-list-item class="px-2">
@@ -37,11 +37,15 @@
         </v-navigation-drawer>
 
         <v-toolbar :clipped-left="$vuetify.breakpoint.lgAndUp" color="blue darken-3" dark app fixed
-            :style="{ 'max-height': '56px' }">
+            :style="{ 'max-height': '56px' } " v-if="valorRuta != '/'">
             <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
                 <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
                 <span class="hidden-sm-and-down">La tete restobar</span>
             </v-toolbar-title>
+
+            <v-spacer></v-spacer>
+
+            <v-btn @click="closeSession" icon><v-icon>cancel</v-icon></v-btn>
         </v-toolbar>
 
         <v-content>
@@ -51,7 +55,6 @@
                 </v-slide-y-transition>
             </v-container>
         </v-content>
-        <!-- <router-view/> -->
     </v-app>
 </template>
 
@@ -61,20 +64,32 @@ export default {
     data: () => ({
         dialog: false,
         drawer: null,
+        valorRuta: null,
         items: [
-            { icon: 'attachment', title: 'Inicio', action: 'home' },
+            { icon: 'attachment', title: 'Inicio', action: 'dashboard' },
             { icon: 'moped', title: 'Pedidos', action: 'mesas' },
             { icon: 'flatware', title: 'Cocina', action: 'cocina' },
-            { icon: 'beenhere', title: 'Administracion', action: 'administracion' }
+            { icon: 'beenhere', title: 'Administracion', action: 'administracion' },
+            { icon: 'beenhere', title: 'Gastos', action: 'gastos' }
         ]
     }),
     methods: {
         getSession() {
-            if (this.$route.path === "/") {
-                this.$refs.estadoActivo[0].$el.classList.add("v-list-item--active");
+            this.valorRuta = this.$route.path;
+
+            if(this.$cookies.get("tokenauth") == null) {
+                this.$router.push("/").catch(()=>{});
             } else {
-                this.$refs.estadoActivo[0].$el.classList.remove("v-list-item--active");
+                if (this.$route.path === "/") {
+                this.$refs.estadoActivo[0].$el.classList.add("v-list-item--active");
+                } else {
+                    this.$refs.estadoActivo[0].$el.classList.remove("v-list-item--active");
+                }
             }
+        },
+        closeSession() {
+            this.$cookies.remove("tokenauth");
+            this.$router.push("/");
         }
     },
     created: function () {
