@@ -537,6 +537,7 @@ export default {
         ingresarCantidadCuentaSeparadaRules: [
             v => !!v || 'Cantidad es requerida'
         ],
+        enviarComandaCocina: false,
         periodoAbiertoValidacion: false,
         manipularDisabledCobrarMonto: false,
         manipularDisabledEnviarCocina: false,
@@ -968,6 +969,7 @@ export default {
         valorMesaSeleccionada(mesaSeleccionada) {
             this.manipularDisabledEnviarCocina = true;
             this.idMesaSelected = mesaSeleccionada;
+            this.$emit('toggle-favorite');
             this.crearOrdenPedido();
         },
         eventoCobrarMonto() {

@@ -5,6 +5,7 @@
                 <div>
                     <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Mesa: {{ datoCabeceraOrdenPedidoMesas.mesa_descripcion }}</p>
                     <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Fecha: {{ datoCabeceraOrdenPedidoMesas.created_at }}</p>
+                    <!-- <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Tiempo transcurrido: {{ intervaloTiempoMinutos }} : {{ intervaloTiempoSegundos }}</p> -->
                 </div>
 
                 <div>
@@ -47,7 +48,8 @@
 
                 <div>
                     <v-btn class="ml-2" color="success" style="width: 100%;margin-top: 10px;margin-left: 0px !important;"
-                        @click="despacharPedidoCocina(datoCabeceraOrdenPedidoMesas.id_cabedera_ordenes_pedido,datoCabeceraOrdenPedidoMesas.created_at)">
+                        @click="despacharPedidoCocina(datoCabeceraOrdenPedidoMesas.id_cabedera_ordenes_pedido,datoCabeceraOrdenPedidoMesas.created_at)"
+                        :disabled="manipularDisabledEnviarCocinaDespacho">
                         Despachar
                     </v-btn>
                 </div>
@@ -61,15 +63,19 @@ export default {
     name: 'Cocina',
     data: () => ({
         datosCabeceraOrdenPedidoMesas: null,
-        loading: false
+        loading: false,
+        manipularDisabledEnviarCocinaDespacho: false,
+        intervaloTiempoMinutos: "",
+        intervaloTiempoSegundos: ""
     }),
     async mounted() {
         this.loading = true;
-        await this.getDatosCabeceraOrdenPedidoMesas();
+        this.getDatosCabeceraOrdenPedidoMesas();
+        this.calcularTiempoTranscurrido();
     },
     methods: {
-        async getDatosCabeceraOrdenPedidoMesas() {
-            await this.axios({
+        getDatosCabeceraOrdenPedidoMesas() {
+            this.axios({
                 url: process.env.VUE_APP_DIRECCION_API_ADMINISTRADOR + '/api/auth/getDatosCabeceraOrdenPedidoMesas',
                 method: 'GET',
                 async: false
@@ -104,6 +110,7 @@ export default {
                         if (response.status == 200) {
                             this.$swal('Pedido despachado correctamente', '', 'success');
                             this.getDatosCabeceraOrdenPedidoMesas();
+                            this.manipularDisabledEnviarCocinaDespacho = false;
                         }
                     })
                     .catch(function (error) {
@@ -112,12 +119,34 @@ export default {
                     .finally(() => (this.loading = false));
                 } else if (result.isDenied) {
                     this.$swal('No se pudo despachar el pedido', '', 'info');
-                    //this.manipularDisabledEnviarCocina = false;
+                    this.manipularDisabledEnviarCocinaDespacho = false;
                 } else {
-                    //this.manipularDisabledEnviarCocina = false;
+                    this.manipularDisabledEnviarCocinaDespacho = false;
                 }
             })
+        },
+        calcularTiempoTranscurrido() {
+            var date = new Date();
+            var padLeft = n => "00".substring(0, "00".length - n.length) + n;
+            var interval = setInterval(() => {
+                var minutes = padLeft(date.getMinutes() + "");
+                var seconds = padLeft(date.getSeconds() + "");
+
+                this.intervaloTiempoMinutos = minutes;
+                this.intervaloTiempoSegundos = seconds;
+                
+                date = new Date(date.getTime() + 1000);
+                // Si llega a 2:45, eliminar el intervalo
+                /*if( minutes == '02' && seconds == '45' ) {
+                    clearInterval(interval); 
+                }*/
+            }, 1000);
         }
+    },
+    updated: function () {
+        setTimeout(function() {
+            this.getDatosCabeceraOrdenPedidoMesas();
+        }.bind(this), 30000)
     }
 }
 </script>
