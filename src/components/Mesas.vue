@@ -1,4 +1,4 @@
-<template>
+<template style="padding:0px;">
     <v-tabs v-model="tab" background-color="indigo" centered dark icons-and-text center v-if="periodoAbiertoValidacion == true">
         <v-tab href="#tab-1">Mesas</v-tab>
         <v-tab href="#tab-2">Para llevar</v-tab>
@@ -8,7 +8,7 @@
                 <v-container fluid v-if="i == 1">
                     <v-row justify="center">
                         <v-col v-for="listaMesa in listaMesas" :key="listaMesa.id" cols="6" sm="4" md="4">
-                            <v-dialog v-model="listaMesa.mesa_modelo" persistent max-width="600px">
+                            <v-dialog v-model="listaMesa.mesa_modelo" persistent max-width="800px">
                                 <template v-slot:activator="{ on, attrs }">
                                     <div class="div-dialog-modal" v-if="listaMesa.IDStatus === 1"
                                         :style="{ 'background-color': '#337DFF' }" v-bind="attrs" v-on="on">
@@ -54,9 +54,15 @@
                                                 </v-col>
                                                 <v-col cols="12" sm="6" md="6" lg="6" xl="6"
                                                     v-for="productById in productoById">
-                                                    <v-text-field :disabled="true"
+                                                    <v-text-field :disabled="true" 
                                                         v-if="selectProduct == '' ? productById.precio_unitario = '' : productById.precio_unitario"
                                                         :value="productById.precio_unitario"></v-text-field>
+                                                </v-col>
+                                            </v-row>
+                                            <v-row v-if="eventoClickAgregarObservacion">
+                                                <v-col cols="12" sm="12" md="12" lg="12" xl="12">
+                                                    <v-text-field type="text" :disabled="validateLoad"
+                                                    placeholder="Ingresar observación del producto" v-model="observacionPedido" required></v-text-field>
                                                 </v-col>
                                             </v-row>
                                             <v-data-table search :headers="headers" :items="listaProductosSeleccionados"
@@ -68,12 +74,15 @@
                                                         <v-spacer></v-spacer>
                                                         <v-dialog v-model="dialog" max-width="500px">
                                                             <template v-slot:activator="{ on, attrs }">
-                                                                <v-btn class="ma-2" color="success"
+                                                                <v-btn class="ml-2" color="success" fab small dark
                                                                     @click="almacenarListaPedido" :disabled="isButtonValid">
-                                                                    Añadir
+                                                                    <v-icon>add</v-icon>
                                                                 </v-btn>
-                                                                <v-btn color="error" @click="initialize">
-                                                                    Limpiar
+                                                                <v-btn class="ml-2" color="error" fab small dark @click="initialize">
+                                                                    <v-icon>cleaning_services</v-icon>
+                                                                </v-btn>
+                                                                <v-btn color="info" fab small dark @click="validacionAgregarCuenta">
+                                                                    <v-icon>bookmark_add</v-icon>
                                                                 </v-btn>
                                                             </template>
                                                             <v-card>
@@ -104,6 +113,10 @@
                                                                                 <v-text-field v-model="editedItem.total"
                                                                                     label="Total"
                                                                                     :disabled="true"></v-text-field>
+                                                                            </v-col>
+                                                                            <v-col cols="12" sm="6" md="4">
+                                                                                <v-text-field v-model="editedItem.observacion"
+                                                                                    label="Observación"></v-text-field>
                                                                             </v-col>
                                                                         </v-row>
                                                                     </v-container>
@@ -136,11 +149,11 @@
                                                     </v-toolbar>
                                                 </template>
                                                 <template v-slot:item.actions="{ item }">
-                                                    <v-icon small color="white" @click="editItem(item)"
+                                                    <v-icon small dark color="white" @click="editItem(item)"
                                                         :style="{ 'padding': '6px', 'background': '#FF9F33' }">
                                                         edit
                                                     </v-icon>
-                                                    <v-icon small color="white" @click="deleteItem(item)"
+                                                    <v-icon small dark color="white" @click="deleteItem(item)"
                                                         :style="{ 'padding': '6px', 'background': '#FF3333' }">
                                                         delete
                                                     </v-icon>
@@ -281,22 +294,23 @@
                                                         datoCabeceraOrdenPedido.odp_monto_total
                                                     }}</p>
                                                 </v-col>
-
-                                                <!-- <v-form @submit.prevent :style="{ 'width': '100%' }">
-                                                    <v-col cols="12">
-                                                        <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Enviar
-                                                            por
-                                                            whatsapp:</p>
-                                                        <v-text-field :style="{ 'margin-top': '0px', 'padding-top': '0px' }"
-                                                            placeholder="Escribe el número" :maxlength="9"></v-text-field>
-                                                    </v-col>
-                                                    <v-col cols="12">
-                                                        <v-btn type="submit" disabled block class="mt-2" color="success"
-                                                            :style="{ 'width': '100%', 'margin-top': '0px !important' }">
-                                                            Enviar cuenta
-                                                        </v-btn>
-                                                    </v-col>
-                                                </v-form> -->
+                                                <!-- <v-col cols="12">
+                                                    <form @submit.prevent="enviarMensajeTextoCliente()" :style="{ 'width': '100%' }">
+                                                        <v-col cols="12">
+                                                            <p :style="{ 'margin-bottom': '0px', 'font-weight': '900' }">Enviar
+                                                                por
+                                                                whatsapp:</p>
+                                                            <v-text-field :style="{ 'margin-top': '0px', 'padding-top': '0px' }"
+                                                                placeholder="Escribe el número" :maxlength="9" required></v-text-field>
+                                                        </v-col>
+                                                        <v-col cols="12">
+                                                            <v-btn type="submit" block class="mt-2" color="success"
+                                                                :style="{ 'width': '100%', 'margin-top': '0px !important' }">
+                                                                Enviar cuenta
+                                                            </v-btn>
+                                                        </v-col>
+                                                    </form>
+                                                </v-col> -->
                                             </v-row>
                                             <v-row v-if="eventoClickCobrarCuentaSeparada == true">
                                             </v-row>
@@ -357,6 +371,12 @@
                                                             :value="productById.precio_unitario"></v-text-field>
                                                     </v-col>
                                                 </v-row>
+                                                <v-row v-if="eventoClickAgregarObservacion">
+                                                    <v-col cols="12" sm="12" md="12" lg="12" xl="12">
+                                                        <v-text-field type="text" :disabled="validateLoad"
+                                                        placeholder="Ingresar observación del producto" v-model="observacionPedido"></v-text-field>
+                                                    </v-col>
+                                                </v-row>
                                                 <v-data-table search :headers="headers" :items="listaProductosSeleccionados"
                                                     class="elevation-1">
                                                     <template v-slot:top>
@@ -366,15 +386,19 @@
                                                             <v-spacer></v-spacer>
                                                             <v-dialog v-model="dialog" max-width="500px">
                                                                 <template v-slot:activator="{ on, attrs }">
-                                                                    <v-btn class="ma-2" color="success"
+                                                                    <v-btn class="ml-2" color="success" fab small dark
                                                                         @click="almacenarListaPedido"
                                                                         :disabled="isButtonValid">
-                                                                        Añadir
+                                                                        <v-icon>add</v-icon>
                                                                     </v-btn>
-                                                                    <v-btn color="error" @click="initialize">
-                                                                        Limpiar
+                                                                    <v-btn class="ml-2" color="error" fab small dark @click="initialize">
+                                                                        <v-icon>cleaning_services</v-icon>
+                                                                    </v-btn>
+                                                                    <v-btn color="info" fab small dark @click="validacionAgregarCuenta">
+                                                                        <v-icon>bookmark_add</v-icon>
                                                                     </v-btn>
                                                                 </template>
+
                                                                 <v-card>
                                                                     <v-card-title>
                                                                         <span class="text-h5">Editar producto del
@@ -519,6 +543,7 @@ export default {
         montoEfectivo: "",
         cantidadCuentaSeparada: "",
         eventoClickVerCuenta: false,
+        eventoClickAgregarObservacion: false,
         eventoClickCobrar: false,
         eventoClickCobrarCuentaSeparada: false,
         eventoClickTomarPedido: false,
@@ -542,6 +567,7 @@ export default {
         selectProduct: "",
         selectFormaPago: "",
         cantidadPedido: 1,
+        observacionPedido: "",
         totalPedido: 0,
         listaMesa: { IDMesa: '' },
         headers: [
@@ -549,7 +575,8 @@ export default {
             { text: 'Cantidad', value: 'cantidad' },
             { text: 'Precio', value: 'precio' },
             { text: 'Total', value: 'total' },
-            { text: 'Actions', value: 'actions', sortable: false }
+            { text: 'Observación', value: 'observacion'},
+            { text: 'Acciones', value: 'actions', sortable: false },
         ],
         listaProductosSeleccionados: [],
         editedIndex: -1,
@@ -557,13 +584,15 @@ export default {
             descripcion: '',
             cantidad: 0,
             precio: 0,
-            total: 0
+            total: 0,
+            observacion: ''
         },
         defaultItem: {
             descripcion: '',
             cantidad: 0,
             precio: 0,
-            total: 0
+            total: 0,
+            observacion: ''
         },
     }),
     async mounted() {
@@ -768,6 +797,12 @@ export default {
                 })
                 .finally(() => (this.loading = false));
         },
+        validacionAgregarCuenta() {
+            this.eventoClickAgregarObservacion = !this.eventoClickAgregarObservacion;
+        },
+        enviarMensajeTextoCliente() {
+            console.log("probando el envio");
+        },
         createCabeceraOrdenPedido(jsonCreateOrdenPedido) {
             this.$swal({
                 title: 'Quieres guardar los cambios?',
@@ -835,11 +870,14 @@ export default {
                 descripcion: this.productoById[0].nombre_productoLimpieza,
                 cantidad: this.cantidadPedido,
                 precio: this.productoById[0].precio_unitario,
-                total: sumaMonto
+                total: sumaMonto,
+                observacion: this.observacionPedido
             }
 
             this.listaProductosSeleccionados.push(agregarListaObjeto)
             this.selectProduct = "";
+            this.eventoClickAgregarObservacion = false;
+            this.observacionPedido = "";
             this.totalDetalle();
         },
         initialize() {

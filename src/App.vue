@@ -45,7 +45,7 @@
 
             <v-spacer></v-spacer>
 
-            <v-btn @click="closeSession" icon><v-icon>cancel</v-icon></v-btn>
+            <v-btn @click="closeSession" icon style="margin-right:12px;"><v-icon>logout</v-icon></v-btn>
         </v-toolbar>
 
         <v-content>
