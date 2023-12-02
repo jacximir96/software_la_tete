@@ -54,6 +54,7 @@
                     </v-btn>
                 </div>
             </v-col>
+            <h1 v-if="datosCabeceraOrdenPedidoMesas == ''">No existen pedidos para cocina!</h1>
         </v-row>
     </v-container>
 </template>
