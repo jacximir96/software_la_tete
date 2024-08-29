@@ -141,12 +141,17 @@ export default {
       {
         action: "administracion",
         icon: "beenhere",
-        title: "Administracion",
+        title: "Cuadres",
       },
       {
         action: "gastos",
         icon: "beenhere",
         title: "Gastos",
+      },
+      {
+        action: "backoffice",
+        icon: "beenhere",
+        title: "Administración",
       }
     ]
   }),

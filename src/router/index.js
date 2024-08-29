@@ -45,6 +45,13 @@ const routes = [
     path: '/dashboard',
     name: 'dashboard',
     component: Dashboard
+  },
+  {
+    path: '/backoffice',
+    name: 'backoffice',
+    beforeEnter() {
+      window.open("http://161.22.40.50/software_la_tete_administrador/public", "_blank");
+    }
   }
 ]
 
