@@ -1327,12 +1327,23 @@ export default {
                                 this.cambiarStatusMesa(jsonStatusMesa);
                                 this.datosCabeceraOrdenPedido = null;
                                 this.manipularDisabledEnviarCocina = false;
+                            } else {
+                                this.$swal('Hubo un problema al crear la orden', response.data.message || '', 'warning');
+                                this.manipularDisabledEnviarCocina = false;
                             }
                         })
-                        .catch(function (error) {
-                            alert("Error en el sistema, comunicate con soporte técnico");
+                        .catch(error => {
+                            if (error.response && error.response.data) {
+                                this.$swal('Error al crear la orden', error.response.data.error || 'Error en el sistema, comunicate con soporte técnico', 'error');
+                                this.manipularDisabledEnviarCocina = false;
+                            } else {
+                                this.$swal('Error en el sistema', 'Comunicate con soporte técnico', 'error');
+                                this.manipularDisabledEnviarCocina = false;
+                            }
                         })
-                        .finally(() => (this.isLoading = false));
+                        .finally(() => {
+                            this.isLoading = false;
+                        });
                 } else if (result.isDenied) {
                     this.$swal('Orden de pedido no se pudo crear', '', 'info');
                     this.manipularDisabledEnviarCocina = false;
