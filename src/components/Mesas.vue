@@ -1334,12 +1334,14 @@ export default {
                         })
                         .catch(error => {
                             if (error.response && error.response.data) {
-                                this.$swal('Error al crear la orden', error.response.data.error || 'Error en el sistema, comunicate con soporte técnico', 'error');
-                                this.manipularDisabledEnviarCocina = false;
+                                // Verificar si el error tiene una propiedad 'message' o 'error' en la respuesta
+                                const errorMessage = error.response.data.error.msg || 'Error en el sistema, comunicate con soporte técnico';
+                                this.$swal('Error al crear la orden', errorMessage, 'error');
                             } else {
+                                // Si no hay un mensaje de error en la respuesta
                                 this.$swal('Error en el sistema', 'Comunicate con soporte técnico', 'error');
-                                this.manipularDisabledEnviarCocina = false;
                             }
+                            this.manipularDisabledEnviarCocina = false;
                         })
                         .finally(() => {
                             this.isLoading = false;
@@ -1445,7 +1447,14 @@ export default {
                         this.clearCliente();
                     }
                 } catch (error) {
-                    alert('Error en la consulta: ' + error);
+                    if (error.response && error.response.data) {
+                        // Verificar si el error tiene una propiedad 'message' o 'error' en la respuesta
+                        const errorMessage = error.response.data.error.msg || 'Error en el sistema, comunicate con soporte técnico';
+                        this.$swal('Error al procesar el pago', errorMessage, 'error');
+                    } else {
+                        // Si no hay un mensaje de error en la respuesta
+                        this.$swal('Error en el sistema', 'Comunicate con soporte técnico', 'error');
+                    }
                 } finally {
                     this.manipularDisabledCobrarMonto = false;
                     this.isLoading = false;
